@@ -1,0 +1,9 @@
+.settings
+.project
+*tempViewerHTML.html
+bin/*.swc
+bin/*.swf
+bin/*.zip
+bin_test/*.swf
+example/bin/*.zip
+example/bin/*.swf
