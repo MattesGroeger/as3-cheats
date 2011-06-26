@@ -19,7 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package src.de.mattesgroeger.cheats
+package de.mattesgroeger.cheats
 {
 	import flash.events.EventDispatcher;
 
