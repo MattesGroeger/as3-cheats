@@ -9,24 +9,62 @@ This library provides an easy way to handle cheats within flash. Register a key 
 - Use cheats within games or as easter egg triggers
 - Persist cheats so you don't have to re-enter them again and again
 
+**Dependencies**
+
+This library is compiled against *as3-signals-v0.7*. You can download the latest version here:  [GitHub](https://github.com/robertpenner/as3-signals)
+
 Change log
 ----------
 
 **0.1.0**
 
-* **[Added]** tbd
+* **[Added]** Basic cheat functionality for strings and special keys
+* **[Added]** Cheats can be toggled (on/off)
+* **[Added]** Master Cheat support
+* **[Added]** Cheats can be optionally persisted within local ShardObject
 
 Usage
 -----
 
-tbd
+The basic use case is to enter any string and then trigger a hidden functionality. 
+
+	function setup():void
+	{
+		var cheatLib:CheatLib = new CheatLib(stage, "demo");
+
+		cheatLib.createMasterCheat("master", true)
+			.toggledSignal
+			.add(handleCheatToggle);
+
+		cheatLib.createCheat("bart")
+			.toggledSignal
+			.add(handleCheatToggle);
+
+		cheatLib.createCheat("lisa")
+			.toggledSignal
+			.add(handleCheatToggle);
+	}
+	
+	function handleCheatToggle(cheat:ICheat):void
+	{
+		trace("Cheat " + cheat.id + " " + cheat.activated);
+	}
+
+For more advanced cheat codes you can use the following syntax:
+
+	var cheat3:Cheat = CheatBuilder.create("fps", 
+							CheatCodeBuilder.create()
+								.appendKeyCode(Keyboard.ENTER)
+								.appendString("fps")
+								.appendKeyCode(Keyboard.ENTER)
+								.build())
+							.setLabel("FPS")
+							.build();
+	cheatLib.addCheat(cheat3);
+	cheat3.toggledSignal.add(handleCheatToggle);
 
 Roadmap
 -------
 
-- Allow using cheats with special keys (Enter etc.) and strings
-- Allow triggering of cheats
-- Allow toggling of cheats (on/off)
-- Allow persisting of cheats
-- Allow master cheats
 - Display cheat success (optional)
+- Allow central signal listener registration in CheatLib

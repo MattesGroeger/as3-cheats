@@ -32,18 +32,23 @@ package src.de.mattesgroeger.cheats.example
 
 	public class Demo extends Sprite
 	{
+		private var cheatLib:CheatLib;
+		
 		public function Demo()
 		{
-			var cheatLib:CheatLib = new CheatLib(stage, "demo");
+			cheatLib = new CheatLib(stage, "demo");
 
-			var masterCheat:ICheat = cheatLib.createMasterCheat("master", true);
-			masterCheat.toggledSignal.add(handleCheatToggle);
+			cheatLib.createMasterCheat("master", true)
+				.toggledSignal
+				.add(handleCheatToggle);
 			
-			var cheat1:ICheat = cheatLib.createCheat("bart");
-			cheat1.toggledSignal.add(handleCheatToggle);
+			cheatLib.createCheat("bart")
+				.toggledSignal
+				.add(handleCheatToggle);
 
-			var cheat2:ICheat = cheatLib.createCheat("lisa");
-			cheat2.toggledSignal.add(handleCheatToggle);
+			cheatLib.createCheat("lisa")
+				.toggledSignal
+				.add(handleCheatToggle);
 
 			var cheat3:Cheat = CheatBuilder.create("fps", 
 									CheatCodeBuilder.create()
