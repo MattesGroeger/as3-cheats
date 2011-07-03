@@ -16,7 +16,7 @@ This library is compiled against *as3-signals-v0.7*. You can download the latest
 Change log
 ----------
 
-**0.1.0**
+**0.0.1**
 
 * **[Added]** Basic cheat functionality for strings and special keys
 * **[Added]** Cheats can be toggled (on/off)
@@ -66,5 +66,6 @@ For more advanced cheat codes you can use the following syntax:
 Roadmap
 -------
 
-- Display cheat success (optional)
+- Finalize API for first release version (0.0.1)
 - Allow central signal listener registration in CheatLib
+- Display cheat success (optional)
