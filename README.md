@@ -67,5 +67,6 @@ Roadmap
 -------
 
 - Finalize API for first release version (0.0.1)
-- Allow central signal listener registration in CheatLib
+- Write documentation for `CheatLib` and `ICheat`
+- Allow central signal listener registration in `CheatLib`
 - Display cheat success (optional)
