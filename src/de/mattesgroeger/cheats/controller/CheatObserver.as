@@ -21,7 +21,7 @@
  */
 package de.mattesgroeger.cheats.controller
 {
-	import de.mattesgroeger.cheats.model.CheatData;
+	import de.mattesgroeger.cheats.model.Cheat;
 
 	import flash.events.IEventDispatcher;
 	import flash.events.KeyboardEvent;
@@ -33,11 +33,11 @@ package de.mattesgroeger.cheats.controller
 	{
 		public var timeout:uint;
 		
-		private var cheatDatas:Vector.<CheatData>;
+		private var cheatDatas:Vector.<Cheat>;
 		private var cheatIndexes:Dictionary = new Dictionary();
 		private var currentTimeout:uint;
 
-		public function CheatObserver(stage:IEventDispatcher, cheatDatas:Vector.<CheatData>, timeout:uint = 5000)
+		public function CheatObserver(stage:IEventDispatcher, cheatDatas:Vector.<Cheat>, timeout:uint = 5000)
 		{
 			this.cheatDatas = cheatDatas;
 			this.timeout = timeout;
@@ -48,7 +48,7 @@ package de.mattesgroeger.cheats.controller
 
 		private function initializeIndexes():void
 		{
-			for each (var cheatData:CheatData in cheatDatas)
+			for each (var cheatData:Cheat in cheatDatas)
 				cheatIndexes[cheatData] = 0;
 		}
 
@@ -59,7 +59,7 @@ package de.mattesgroeger.cheats.controller
 
 		private function handleKeyUp(event:KeyboardEvent):void
 		{
-			for each (var cheatData:CheatData in cheatDatas)
+			for each (var cheatData:Cheat in cheatDatas)
 			{
 				if (cheatData.code.keyCodeAt(cheatIndexes[cheatData]) == event.keyCode)
 				{

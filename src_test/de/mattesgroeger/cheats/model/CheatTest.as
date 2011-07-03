@@ -31,7 +31,7 @@ package de.mattesgroeger.cheats.model
 	import org.osflash.signals.utils.SignalAsyncEvent;
 	import org.osflash.signals.utils.handleSignal;
 
-	public class CheatDataTest
+	public class CheatTest
 	{
 		[Rule]
 		public var mockitoRule:IMethodRule = new MockitoRule();
@@ -39,11 +39,11 @@ package de.mattesgroeger.cheats.model
 		[Mock]
 		public var cheatCode:CheatCode;
 		
-		private var root:CheatData;
-		private var sub1a:CheatData;
-		private var sub1b:CheatData;
-		private var sub2c:CheatData;
-		private var sub2d:CheatData;
+		private var root:Cheat;
+		private var sub1a:Cheat;
+		private var sub1b:Cheat;
+		private var sub2c:Cheat;
+		private var sub2d:Cheat;
 		
 		/**
 		 *   root		 r   
@@ -57,11 +57,11 @@ package de.mattesgroeger.cheats.model
 		[Before]
 		public function before():void
 		{
-			root = new CheatData("root", cheatCode);
-			sub1a = new CheatData("sub1a", cheatCode, root);
-			sub1b = new CheatData("sub1b", cheatCode, root);
-			sub2c = new CheatData("sub2c", cheatCode, sub1b);
-			sub2d = new CheatData("sub2d", cheatCode, sub1b);
+			root = new Cheat("root", cheatCode);
+			sub1a = new Cheat("sub1a", cheatCode, root);
+			sub1b = new Cheat("sub1b", cheatCode, root);
+			sub2c = new Cheat("sub2c", cheatCode, sub1b);
+			sub2d = new Cheat("sub2d", cheatCode, sub1b);
 		}
 		
 		[Test]
@@ -102,7 +102,7 @@ package de.mattesgroeger.cheats.model
 
 		private function handleToggled(event:SignalAsyncEvent, data:Object):void
 		{
-			assertThat(CheatData(data["data"]).activated, equalTo(true));
+			assertThat(Cheat(data["data"]).activated, equalTo(true));
 		}
 
 		[Test(async)]

@@ -22,7 +22,7 @@
 package de.mattesgroeger.cheats.controller
 {
 	import de.mattesgroeger.cheats.model.CheatCode;
-	import de.mattesgroeger.cheats.model.CheatData;
+	import de.mattesgroeger.cheats.model.Cheat;
 
 	import org.flexunit.async.Async;
 	import org.flexunit.rules.IMethodRule;
@@ -50,10 +50,10 @@ package de.mattesgroeger.cheats.controller
 		public var cheatCode2:CheatCode;
 
 		[Mock(argsList="cheatDataArgs")]
-		public var cheatData1:CheatData;
+		public var cheatData1:Cheat;
 		
 		[Mock(argsList="cheatDataArgs")]
-		public var cheatData2:CheatData;
+		public var cheatData2:Cheat;
 		
 		public var cheatDataArgs:Array = [null, null];
 		
@@ -64,7 +64,7 @@ package de.mattesgroeger.cheats.controller
 		public function before():void
 		{
 			dispatcher = new EventDispatcher();
-			observer = new CheatObserver(dispatcher, Vector.<CheatData>([cheatData1, cheatData2]), 0);
+			observer = new CheatObserver(dispatcher, Vector.<Cheat>([cheatData1, cheatData2]), 0);
 			
 			given(cheatData1.code).willReturn(cheatCode1);
 			given(cheatCode1.keyCodeAt(0)).willReturn(1);

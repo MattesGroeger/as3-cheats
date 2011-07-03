@@ -25,43 +25,26 @@ package de.mattesgroeger.cheats.model
 
 	import flash.errors.IllegalOperationError;
 
-	public class CheatData
+	public class Cheat
 	{
 		private var _id:String;
 		private var _code:CheatCode;
-		private var _parent:CheatData;
-		private var _children:Vector.<CheatData>;
+		private var _parent:Cheat;
+		private var _label:String;
 		
+		private var _children:Vector.<Cheat>;
 		private var _activated:Boolean = false;
 		private var _toggledSignal:Signal = new Signal();
 
-		public function CheatData(id:String, code:CheatCode, parent:CheatData = null)
+		public function Cheat(id:String, code:CheatCode, parent:Cheat = null, label:String = null)
 		{
 			_id = id;
 			_code = code;
 			_parent = parent;
+			_label = label;
 			
 			if (_parent != null)
 				_parent.addChild(this);
-		}
-
-		internal function get parent():CheatData
-		{
-			return _parent;
-		}
-
-		internal function get children():Vector.<CheatData>
-		{
-			return _children;
-		}
-		
-		internal function addChild(data:CheatData):void
-		{
-			if (data.parent != this)
-				throw new IllegalOperationError("Can not register child for cheat that is not the parent!");
-			
-			_children ||= new Vector.<CheatData>();
-			_children.push(data);
 		}
 
 		public function get id():String
@@ -74,12 +57,14 @@ package de.mattesgroeger.cheats.model
 			return _code;
 		}
 
-		public function toggle():void
+		public function get label():String
 		{
-			if (!parentActivated())
-				return;
-			
-			activated = !_activated;
+			return _label;
+		}
+
+		public function get toggledSignal():Signal
+		{
+			return _toggledSignal;
 		}
 
 		public function set activated(activated:Boolean):void
@@ -99,14 +84,36 @@ package de.mattesgroeger.cheats.model
 			return (parentActivated()) ? _activated : false;
 		}
 
+		public function toggle():void
+		{
+			if (!parentActivated())
+				return;
+			
+			activated = !_activated;
+		}
+
+		internal function get parent():Cheat
+		{
+			return _parent;
+		}
+
+		internal function get children():Vector.<Cheat>
+		{
+			return _children;
+		}
+		
+		internal function addChild(data:Cheat):void
+		{
+			if (data.parent != this)
+				throw new IllegalOperationError("Can not register child for cheat that is not the parent!");
+			
+			_children ||= new Vector.<Cheat>();
+			_children.push(data);
+		}
+
 		private function parentActivated():Boolean
 		{
 			return (_parent) ? _parent.activated : true;
-		}
-
-		public function get toggledSignal():Signal
-		{
-			return _toggledSignal;
 		}
 	}
 }

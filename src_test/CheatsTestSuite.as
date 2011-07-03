@@ -24,7 +24,7 @@ package
 	import de.mattesgroeger.cheats.controller.CheatObserverTest;
 	import de.mattesgroeger.cheats.model.CheatCodeBuilderTest;
 	import de.mattesgroeger.cheats.model.CheatCodeTest;
-	import de.mattesgroeger.cheats.model.CheatDataTest;
+	import de.mattesgroeger.cheats.model.CheatTest;
 	import de.mattesgroeger.cheats.util.KeyCodeUtilTest;
 
 	[Suite]
@@ -32,7 +32,7 @@ package
 	public class CheatsTestSuite
 	{
 		public var keyCodeUtilTest:KeyCodeUtilTest;
-		public var cheatDataTest:CheatDataTest;
+		public var cheatTest:CheatTest;
 		public var cheatCodeTest:CheatCodeTest;
 		public var cheatCodeBuilderTest:CheatCodeBuilderTest;
 		public var cheatObserverTest:CheatObserverTest;
