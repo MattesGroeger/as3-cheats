@@ -63,16 +63,15 @@ package de.mattesgroeger.cheats.controller
 		[Before]
 		public function before():void
 		{
-			cheatData1.code = cheatCode1;
-			cheatData2.code = cheatCode2;
-			
 			dispatcher = new EventDispatcher();
 			observer = new CheatObserver(dispatcher, Vector.<CheatData>([cheatData1, cheatData2]), 0);
 			
+			given(cheatData1.code).willReturn(cheatCode1);
 			given(cheatCode1.keyCodeAt(0)).willReturn(1);
 			given(cheatCode1.keyCodeAt(1)).willReturn(2);
 			given(cheatCode1.length).willReturn(2);
 			
+			given(cheatData2.code).willReturn(cheatCode2);
 			given(cheatCode2.keyCodeAt(0)).willReturn(2);
 			given(cheatCode2.keyCodeAt(1)).willReturn(3);
 			given(cheatCode2.keyCodeAt(2)).willReturn(4);

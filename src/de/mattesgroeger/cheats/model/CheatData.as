@@ -23,27 +23,70 @@ package de.mattesgroeger.cheats.model
 {
 	import org.osflash.signals.Signal;
 
+	import flash.errors.IllegalOperationError;
+
 	public class CheatData
 	{
-		public var id:String;
-		public var code:CheatCode;
+		private var _id:String;
+		private var _code:CheatCode;
+		private var _parent:CheatData;
+		private var _children:Vector.<CheatData>;
 		
 		private var _activated:Boolean = false;
 		private var _toggledSignal:Signal = new Signal();
 
-		public function CheatData(id:String, code:CheatCode)
+		public function CheatData(id:String, code:CheatCode, parent:CheatData = null)
 		{
-			this.id = id;
-			this.code = code;
+			_id = id;
+			_code = code;
+			_parent = parent;
+			
+			if (_parent != null)
+				_parent.addChild(this);
+		}
+
+		internal function get parent():CheatData
+		{
+			return _parent;
+		}
+
+		internal function get children():Vector.<CheatData>
+		{
+			return _children;
+		}
+		
+		internal function addChild(data:CheatData):void
+		{
+			if (data.parent != this)
+				throw new IllegalOperationError("Can not register child for cheat that is not the parent!");
+			
+			_children ||= new Vector.<CheatData>();
+			_children.push(data);
+		}
+
+		public function get id():String
+		{
+			return _id;
+		}
+
+		public function get code():CheatCode
+		{
+			return _code;
 		}
 
 		public function toggle():void
 		{
+			if (!parentActivated())
+				return;
+			
 			activated = !_activated;
 		}
 
 		public function set activated(activated:Boolean):void
 		{
+			if (!parentActivated())
+				return;
+			
 			if (_activated == activated)
 				return;
 			
@@ -53,7 +96,12 @@ package de.mattesgroeger.cheats.model
 
 		public function get activated():Boolean
 		{
-			return _activated;
+			return (parentActivated()) ? _activated : false;
+		}
+
+		private function parentActivated():Boolean
+		{
+			return (_parent) ? _parent.activated : true;
 		}
 
 		public function get toggledSignal():Signal
