@@ -21,28 +21,20 @@
  */
 package de.mattesgroeger.cheats.model
 {
-	import flash.errors.IllegalOperationError;
+	import org.osflash.signals.ISignal;
 
-	public class CheatCode implements ICheatCode
+	public interface ICheat
 	{
-		private var keyCodes:Vector.<uint> = new Vector.<uint>();
+		function get id():String;
 
-		public function push(keyCode:uint):void
-		{
-			keyCodes.push(keyCode);
-		}
+		function get code():ICheatCode;
+		
+		function set label(label:String):void;
+		
+		function get label():String;
 
-		public function keyCodeAt(index:uint):uint
-		{
-			if (index > keyCodes.length - 1)
-				throw new IllegalOperationError("The index " + index + " is out of range " + length);
+		function get toggledSignal():ISignal;
 
-			return keyCodes[index];
-		}
-
-		public function get length():uint
-		{
-			return keyCodes.length;
-		}
+		function get activated():Boolean;
 	}
 }

@@ -21,12 +21,45 @@
  */
 package src.de.mattesgroeger.cheats.example
 {
+	import de.mattesgroeger.cheats.CheatLib;
+	import de.mattesgroeger.cheats.model.Cheat;
+	import de.mattesgroeger.cheats.model.CheatBuilder;
+	import de.mattesgroeger.cheats.model.CheatCodeBuilder;
+	import de.mattesgroeger.cheats.model.ICheat;
+
 	import flash.display.Sprite;
+	import flash.ui.Keyboard;
 
 	public class Demo extends Sprite
 	{
 		public function Demo()
 		{
+			var cheatLib:CheatLib = new CheatLib(stage, "demo");
+
+			var masterCheat:ICheat = cheatLib.createMasterCheat("master", true);
+			masterCheat.toggledSignal.add(handleCheatToggle);
+			
+			var cheat1:ICheat = cheatLib.createCheat("bart");
+			cheat1.toggledSignal.add(handleCheatToggle);
+
+			var cheat2:ICheat = cheatLib.createCheat("lisa");
+			cheat2.toggledSignal.add(handleCheatToggle);
+
+			var cheat3:Cheat = CheatBuilder.create("fps", 
+									CheatCodeBuilder.create()
+										.appendKeyCode(Keyboard.ENTER)
+										.appendString("fps")
+										.appendKeyCode(Keyboard.ENTER)
+										.build())
+									.setLabel("FPS")
+									.build();
+			cheatLib.addCheat(cheat3);
+			cheat3.toggledSignal.add(handleCheatToggle);
+		}
+
+		private function handleCheatToggle(cheat:ICheat):void
+		{
+			trace("Cheat " + cheat.id + " " + cheat.activated);
 		}
 	}
 }

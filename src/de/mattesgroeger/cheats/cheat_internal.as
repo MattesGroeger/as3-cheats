@@ -19,30 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package de.mattesgroeger.cheats.model
+package de.mattesgroeger.cheats
 {
-	import flash.errors.IllegalOperationError;
-
-	public class CheatCode implements ICheatCode
-	{
-		private var keyCodes:Vector.<uint> = new Vector.<uint>();
-
-		public function push(keyCode:uint):void
-		{
-			keyCodes.push(keyCode);
-		}
-
-		public function keyCodeAt(index:uint):uint
-		{
-			if (index > keyCodes.length - 1)
-				throw new IllegalOperationError("The index " + index + " is out of range " + length);
-
-			return keyCodes[index];
-		}
-
-		public function get length():uint
-		{
-			return keyCodes.length;
-		}
-	}
+	public namespace cheat_internal = "de.mattesgroeger.cheats";
 }

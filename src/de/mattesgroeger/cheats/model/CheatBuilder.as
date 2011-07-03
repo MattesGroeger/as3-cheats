@@ -21,16 +21,20 @@
  */
 package de.mattesgroeger.cheats.model
 {
+	import de.mattesgroeger.cheats.cheat_internal;
+
+	use namespace cheat_internal;
+
 	public class CheatBuilder
 	{
 		private var cheat:Cheat;
-		
-		public static function create(id:String, code:CheatCode):CheatBuilder
+
+		public static function create(id:String, code:ICheatCode):CheatBuilder
 		{
 			return new CheatBuilder(id, code);
 		}
 
-		public function CheatBuilder(id:String, code:CheatCode)
+		public function CheatBuilder(id:String, code:ICheatCode)
 		{
 			cheat = new Cheat(id, code);
 		}
@@ -38,14 +42,14 @@ package de.mattesgroeger.cheats.model
 		public function setLabel(label:String):CheatBuilder
 		{
 			cheat.label = label;
-			
+
 			return this;
 		}
 
 		public function setMasterCheat(master:Cheat):CheatBuilder
 		{
 			cheat.parent = master;
-			
+
 			return this;
 		}
 

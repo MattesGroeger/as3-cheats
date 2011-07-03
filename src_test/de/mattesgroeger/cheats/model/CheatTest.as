@@ -21,16 +21,20 @@
  */
 package de.mattesgroeger.cheats.model
 {
-	import org.osflash.signals.utils.proceedOnSignal;
-	import org.osflash.signals.utils.failOnSignal;
+	import de.mattesgroeger.cheats.cheat_internal;
+
 	import org.flexunit.rules.IMethodRule;
 	import org.hamcrest.assertThat;
 	import org.hamcrest.object.equalTo;
 	import org.hamcrest.object.notNullValue;
 	import org.mockito.integrations.flexunit4.MockitoRule;
 	import org.osflash.signals.utils.SignalAsyncEvent;
+	import org.osflash.signals.utils.failOnSignal;
 	import org.osflash.signals.utils.handleSignal;
-
+	import org.osflash.signals.utils.proceedOnSignal;
+	
+	use namespace cheat_internal;
+	
 	public class CheatTest
 	{
 		[Rule]

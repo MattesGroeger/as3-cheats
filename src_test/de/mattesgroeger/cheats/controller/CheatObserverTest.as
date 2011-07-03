@@ -21,8 +21,8 @@
  */
 package de.mattesgroeger.cheats.controller
 {
-	import de.mattesgroeger.cheats.model.CheatCode;
 	import de.mattesgroeger.cheats.model.Cheat;
+	import de.mattesgroeger.cheats.model.CheatCode;
 
 	import org.flexunit.async.Async;
 	import org.flexunit.rules.IMethodRule;
@@ -37,7 +37,7 @@ package de.mattesgroeger.cheats.controller
 	import flash.events.KeyboardEvent;
 	import flash.events.TimerEvent;
 	import flash.utils.Timer;
-
+	
 	public class CheatObserverTest
 	{
 		[Rule]
@@ -48,6 +48,9 @@ package de.mattesgroeger.cheats.controller
 		
 		[Mock]
 		public var cheatCode2:CheatCode;
+		
+		[Mock]
+		public var cheatsProvider:ICheatsProvider;
 
 		[Mock(argsList="cheatDataArgs")]
 		public var cheatData1:Cheat;
@@ -64,7 +67,9 @@ package de.mattesgroeger.cheats.controller
 		public function before():void
 		{
 			dispatcher = new EventDispatcher();
-			observer = new CheatObserver(dispatcher, Vector.<Cheat>([cheatData1, cheatData2]), 0);
+			observer = new CheatObserver(dispatcher, cheatsProvider, 0);
+			
+			given(cheatsProvider.cheats).willReturn(Vector.<Cheat>([cheatData1, cheatData2]));
 			
 			given(cheatData1.code).willReturn(cheatCode1);
 			given(cheatCode1.keyCodeAt(0)).willReturn(1);
@@ -167,6 +172,12 @@ package de.mattesgroeger.cheats.controller
 		private function dispatchKey(keyCode:uint):void
 		{
 			dispatcher.dispatchEvent(new KeyboardEvent(KeyboardEvent.KEY_UP, true, false, 0, keyCode));
+		}
+		
+		[Test]
+		public function should_destroy():void
+		{
+			observer.destroy();
 		}
 	}
 }

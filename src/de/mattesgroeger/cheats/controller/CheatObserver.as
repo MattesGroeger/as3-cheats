@@ -33,33 +33,42 @@ package de.mattesgroeger.cheats.controller
 	{
 		public var timeout:uint;
 		
-		private var cheatDatas:Vector.<Cheat>;
+		private var stage:IEventDispatcher;
+		private var cheatsProvider:ICheatsProvider;
+		private var cheats:Vector.<Cheat>;
 		private var cheatIndexes:Dictionary = new Dictionary();
 		private var currentTimeout:uint;
+		private var initialized:Boolean;
 
-		public function CheatObserver(stage:IEventDispatcher, cheatDatas:Vector.<Cheat>, timeout:uint = 5000)
+		public function CheatObserver(stage:IEventDispatcher, cheatsProvider:ICheatsProvider, timeout:uint = 5000)
 		{
-			this.cheatDatas = cheatDatas;
+			this.stage = stage;
+			this.cheatsProvider = cheatsProvider;
 			this.timeout = timeout;
 			
-			initializeIndexes();
-			registerForKeyEvents(stage);
+			registerForKeyEvents();
 		}
 
-		private function initializeIndexes():void
+		private function initialize():void
 		{
-			for each (var cheatData:Cheat in cheatDatas)
+			cheats = cheatsProvider.cheats;
+			initialized = true;
+			
+			for each (var cheatData:Cheat in cheats)
 				cheatIndexes[cheatData] = 0;
 		}
 
-		private function registerForKeyEvents(stage:IEventDispatcher):void
+		private function registerForKeyEvents():void
 		{
 			stage.addEventListener(KeyboardEvent.KEY_UP, handleKeyUp);
 		}
 
 		private function handleKeyUp(event:KeyboardEvent):void
 		{
-			for each (var cheatData:Cheat in cheatDatas)
+			if (!initialized)
+				initialize();
+			
+			for each (var cheatData:Cheat in cheats)
 			{
 				if (cheatData.code.keyCodeAt(cheatIndexes[cheatData]) == event.keyCode)
 				{
@@ -86,7 +95,17 @@ package de.mattesgroeger.cheats.controller
 		{
 			clearTimeout(currentTimeout);
 			
-			currentTimeout = setTimeout(initializeIndexes, timeout);
+			currentTimeout = setTimeout(initialize, timeout);
+		}
+
+		public function destroy():void
+		{
+			clearTimeout(currentTimeout);
+			
+			cheats = null;
+			cheatIndexes = null;
+			
+			stage.removeEventListener(KeyboardEvent.KEY_UP, handleKeyUp);
 		}
 	}
 }

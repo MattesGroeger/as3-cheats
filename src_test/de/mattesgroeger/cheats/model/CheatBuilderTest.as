@@ -32,7 +32,7 @@ package de.mattesgroeger.cheats.model
 		public var mockitoRule:IMethodRule = new MockitoRule();
 
 		[Mock]
-		public var cheatCode:CheatCode;
+		public var cheatCode:ICheatCode;
 
 		[Mock(argsList="masterCheatArgs")]
 		public var masterCheat:Cheat;
@@ -41,7 +41,7 @@ package de.mattesgroeger.cheats.model
 		[Test]
 		public function should_build_default_cheat():void
 		{
-			var cheat:Cheat = CheatBuilder.create("test", cheatCode)
+			var cheat:ICheat = CheatBuilder.create("test", cheatCode)
 								.setLabel("Label")
 								.setMasterCheat(masterCheat)
 								.build();
@@ -49,7 +49,6 @@ package de.mattesgroeger.cheats.model
 			assertThat(cheat.id, equalTo("test"));
 			assertThat(cheat.code, equalTo(cheatCode));
 			assertThat(cheat.label, equalTo("Label"));
-			assertThat(cheat.parent, equalTo(masterCheat));
 		}
 	}
 }

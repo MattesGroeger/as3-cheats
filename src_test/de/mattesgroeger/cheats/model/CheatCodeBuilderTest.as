@@ -31,7 +31,7 @@ package de.mattesgroeger.cheats.model
 		[Test]
 		public function should_build_cheat_code():void
 		{
-			var cheatCode:CheatCode = CheatCodeBuilder.create()
+			var cheatCode:ICheatCode = CheatCodeBuilder.create()
 										.appendKeyCode(Keyboard.ENTER)
 										.appendString("test")
 										.appendKeyCode(Keyboard.ESCAPE)
