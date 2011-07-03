@@ -19,7 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package src.de.mattesgroeger.cheats.example
+package de.mattesgroeger.cheats.example
 {
 	import de.mattesgroeger.cheats.CheatLib;
 	import de.mattesgroeger.cheats.model.Cheat;
@@ -38,18 +38,22 @@ package src.de.mattesgroeger.cheats.example
 		{
 			cheatLib = new CheatLib(stage, "demo");
 
+			// persistent master cheat
 			cheatLib.createMasterCheat("master", true)
 				.toggledSignal
 				.add(handleCheatToggle);
 			
+			// not persistent cheat
 			cheatLib.createCheat("bart")
 				.toggledSignal
 				.add(handleCheatToggle);
 
-			cheatLib.createCheat("lisa")
+			// persistent cheat
+			cheatLib.createCheat("lisa", true)
 				.toggledSignal
 				.add(handleCheatToggle);
 
+			// cheat with complex code
 			var cheat3:Cheat = CheatBuilder.create("fps", 
 									CheatCodeBuilder.create()
 										.appendKeyCode(Keyboard.ENTER)
