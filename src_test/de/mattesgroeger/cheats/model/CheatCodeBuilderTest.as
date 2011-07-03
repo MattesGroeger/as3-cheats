@@ -19,18 +19,31 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package
+package de.mattesgroeger.cheats.model
 {
-	import de.mattesgroeger.cheats.model.CheatCodeBuilderTest;
-	import de.mattesgroeger.cheats.model.CheatCodeTest;
-	import de.mattesgroeger.cheats.util.KeyCodeUtilTest;
+	import org.flexunit.assertThat;
+	import org.hamcrest.object.equalTo;
 
-	[Suite]
-	[RunWith("org.flexunit.runners.Suite")]
-	public class CheatsTestSuite
+	import flash.ui.Keyboard;
+
+	public class CheatCodeBuilderTest
 	{
-		public var keyCodeUtilTest:KeyCodeUtilTest;
-		public var cheatCodeTest:CheatCodeTest;
-		public var cheatCodeBuilderTest:CheatCodeBuilderTest;
+		[Test]
+		public function should_build_cheat_code():void
+		{
+			var cheatCode:CheatCode = CheatCodeBuilder.create()
+										.appendKeyCode(Keyboard.ENTER)
+										.appendString("test")
+										.appendKeyCode(Keyboard.ESCAPE)
+										.build();
+
+			assertThat(cheatCode.length, equalTo(6));
+			assertThat(cheatCode.keyCodeAt(0), equalTo(13));
+			assertThat(cheatCode.keyCodeAt(1), equalTo(84));
+			assertThat(cheatCode.keyCodeAt(2), equalTo(69));
+			assertThat(cheatCode.keyCodeAt(3), equalTo(83));
+			assertThat(cheatCode.keyCodeAt(4), equalTo(84));
+			assertThat(cheatCode.keyCodeAt(5), equalTo(27));
+		}
 	}
 }

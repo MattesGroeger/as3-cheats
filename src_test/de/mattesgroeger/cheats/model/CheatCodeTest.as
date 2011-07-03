@@ -19,18 +19,55 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package
+package de.mattesgroeger.cheats.model
 {
-	import de.mattesgroeger.cheats.model.CheatCodeBuilderTest;
-	import de.mattesgroeger.cheats.model.CheatCodeTest;
-	import de.mattesgroeger.cheats.util.KeyCodeUtilTest;
+	import org.flexunit.assertThat;
+	import org.flexunit.asserts.fail;
+	import org.hamcrest.object.equalTo;
 
-	[Suite]
-	[RunWith("org.flexunit.runners.Suite")]
-	public class CheatsTestSuite
+	import flash.errors.IllegalOperationError;
+	import flash.ui.Keyboard;
+
+	public class CheatCodeTest
 	{
-		public var keyCodeUtilTest:KeyCodeUtilTest;
-		public var cheatCodeTest:CheatCodeTest;
-		public var cheatCodeBuilderTest:CheatCodeBuilderTest;
+		[Test]
+		public function should_be_empty():void
+		{
+			var code:CheatCode = new CheatCode();
+
+			assertThat(code.length, equalTo(0));
+		}
+
+		[Test]
+		public function should_push_valid_codes():void
+		{
+			var code:CheatCode = new CheatCode();
+			
+			code.push(Keyboard.ENTER);
+			code.push(54);
+			
+			assertThat(code.length, equalTo(2));
+			assertThat(code.keyCodeAt(0), equalTo(Keyboard.ENTER));
+			assertThat(code.keyCodeAt(1), equalTo(54));
+		}
+		
+		[Test]
+		public function should_throw_out_of_range_error():void
+		{
+			var code:CheatCode = new CheatCode();
+			code.push(1);
+			
+			try
+			{
+				code.keyCodeAt(1);
+			}
+			catch (e:IllegalOperationError)
+			{
+				return;
+			}
+			
+			fail("IllegalOperationError expected");
+		}
+
 	}
 }
