@@ -19,24 +19,39 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package
+package de.mattesgroeger.cheats.model
 {
-	import de.mattesgroeger.cheats.controller.CheatObserverTest;
-	import de.mattesgroeger.cheats.model.CheatBuilderTest;
-	import de.mattesgroeger.cheats.model.CheatCodeBuilderTest;
-	import de.mattesgroeger.cheats.model.CheatCodeTest;
-	import de.mattesgroeger.cheats.model.CheatTest;
-	import de.mattesgroeger.cheats.util.KeyCodeUtilTest;
-
-	[Suite]
-	[RunWith("org.flexunit.runners.Suite")]
-	public class CheatsTestSuite
+	public class CheatBuilder
 	{
-		public var keyCodeUtilTest:KeyCodeUtilTest;
-		public var cheatTest:CheatTest;
-		public var cheatBuilderTest:CheatBuilderTest;
-		public var cheatCodeTest:CheatCodeTest;
-		public var cheatCodeBuilderTest:CheatCodeBuilderTest;
-		public var cheatObserverTest:CheatObserverTest;
+		private var cheat:Cheat;
+		
+		public static function create(id:String, code:CheatCode):CheatBuilder
+		{
+			return new CheatBuilder(id, code);
+		}
+
+		public function CheatBuilder(id:String, code:CheatCode)
+		{
+			cheat = new Cheat(id, code);
+		}
+
+		public function setLabel(label:String):CheatBuilder
+		{
+			cheat.label = label;
+			
+			return this;
+		}
+
+		public function setMasterCheat(master:Cheat):CheatBuilder
+		{
+			cheat.parent = master;
+			
+			return this;
+		}
+
+		public function build():Cheat
+		{
+			return cheat;
+		}
 	}
 }

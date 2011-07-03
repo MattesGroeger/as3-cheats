@@ -57,6 +57,11 @@ package de.mattesgroeger.cheats.model
 			return _code;
 		}
 
+		public function set label(label:String):void
+		{
+			_label = label;
+		}
+
 		public function get label():String
 		{
 			return _label;
@@ -90,6 +95,11 @@ package de.mattesgroeger.cheats.model
 				return;
 			
 			activated = !_activated;
+		}
+
+		internal function set parent(parent:Cheat):void
+		{
+			_parent = parent;
 		}
 
 		internal function get parent():Cheat

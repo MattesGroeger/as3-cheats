@@ -19,24 +19,37 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package
+package de.mattesgroeger.cheats.model
 {
-	import de.mattesgroeger.cheats.controller.CheatObserverTest;
-	import de.mattesgroeger.cheats.model.CheatBuilderTest;
-	import de.mattesgroeger.cheats.model.CheatCodeBuilderTest;
-	import de.mattesgroeger.cheats.model.CheatCodeTest;
-	import de.mattesgroeger.cheats.model.CheatTest;
-	import de.mattesgroeger.cheats.util.KeyCodeUtilTest;
+	import org.flexunit.rules.IMethodRule;
+	import org.hamcrest.assertThat;
+	import org.hamcrest.object.equalTo;
+	import org.mockito.integrations.flexunit4.MockitoRule;
 
-	[Suite]
-	[RunWith("org.flexunit.runners.Suite")]
-	public class CheatsTestSuite
+	public class CheatBuilderTest
 	{
-		public var keyCodeUtilTest:KeyCodeUtilTest;
-		public var cheatTest:CheatTest;
-		public var cheatBuilderTest:CheatBuilderTest;
-		public var cheatCodeTest:CheatCodeTest;
-		public var cheatCodeBuilderTest:CheatCodeBuilderTest;
-		public var cheatObserverTest:CheatObserverTest;
+		[Rule]
+		public var mockitoRule:IMethodRule = new MockitoRule();
+
+		[Mock]
+		public var cheatCode:CheatCode;
+
+		[Mock(argsList="masterCheatArgs")]
+		public var masterCheat:Cheat;
+		public var masterCheatArgs:Array = [null, null];
+		
+		[Test]
+		public function should_build_default_cheat():void
+		{
+			var cheat:Cheat = CheatBuilder.create("test", cheatCode)
+								.setLabel("Label")
+								.setMasterCheat(masterCheat)
+								.build();
+
+			assertThat(cheat.id, equalTo("test"));
+			assertThat(cheat.code, equalTo(cheatCode));
+			assertThat(cheat.label, equalTo("Label"));
+			assertThat(cheat.parent, equalTo(masterCheat));
+		}
 	}
 }
