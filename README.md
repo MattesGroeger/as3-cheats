@@ -18,11 +18,11 @@ Change log
 
 **0.0.1**
 
-* **[Added]** Basic cheat functionality for strings and special keys
+* **[Added]** Cheat functionality for any combination of strings and special keys
 * **[Added]** Cheats can be toggled (on/off)
+* **[Added]** Per cheat and global toggled Signal
 * **[Added]** Master Cheat support
-* **[Added]** Cheats can be optionally persisted within local ShardObject
-* **[Added]** Global Toggled Signal for all cheats via CheatLib
+* **[Added]** Cheats can be optionally persisted (Local Shared Object)
 
 Usage
 -----
@@ -33,22 +33,29 @@ The basic use case is to enter any string and then trigger a hidden functionalit
 	{
 		var cheatLib:CheatLib = new CheatLib(stage, "demo");
 
-		cheatLib.createMasterCheat("master", true)
-			.toggledSignal
-			.add(handleCheatToggle);
+		// register central listener for all cheats
+		cheatLib.toggledSignal.add(handleAllCheatsToggle);
 
-		cheatLib.createCheat("bart")
-			.toggledSignal
-			.add(handleCheatToggle);
+		// persistent master cheat
+		cheatLib.createMasterCheat("master", true);
 
-		cheatLib.createCheat("lisa")
+		// not persistent cheat
+		cheatLib.createCheat("bart");
+
+		// persistent cheat with custom toggle listener
+		cheatLib.createCheat("lisa", true)
 			.toggledSignal
-			.add(handleCheatToggle);
+			.add(handleLisaCheatToggle);
 	}
 	
-	function handleCheatToggle(cheat:ICheat):void
+	function handleAllCheatsToggle(cheat:ICheat):void
 	{
 		trace("Cheat " + cheat.id + " " + cheat.activated);
+	}
+
+	function handleLisaCheatToggle(cheat:ICheat):void
+	{
+		trace("Cheat 'lisa' (custom listener) " + cheat.activated);
 	}
 
 For more advanced cheat codes you can use the following syntax:
@@ -62,7 +69,7 @@ For more advanced cheat codes you can use the following syntax:
 							.setLabel("FPS")
 							.build();
 	cheatLib.addCheat(cheat3);
-	cheat3.toggledSignal.add(handleCheatToggle);
+	cheat3.toggledSignal.add(handleAllCheatsToggle);
 
 Roadmap
 -------
