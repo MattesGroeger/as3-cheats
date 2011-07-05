@@ -6,12 +6,76 @@ This library provides an easy way to handle cheats within flash. Register a key 
 **Use cases for this library:**
 
 - Enable certain functionalities in live environments which should be normally deactivated (e.g. logging)
-- Use cheats within games or as easter egg triggers
+- Use cheats within games
+- Provide easter egg triggers
 - Persist cheats so you don't have to re-enter them again and again
 
 **Dependencies**
 
 This library is compiled against *as3-signals-v0.7*. You can download the latest version here:  [GitHub](https://github.com/robertpenner/as3-signals)
+
+Usage
+-----
+
+**Creation**
+
+First of all you have to initialize the CheatLib with the stage and a custom identifier:
+
+	var lib:ICheatLib = CheatLib.create(stage, "demo");
+
+You can then either use the returned instance or always retrieve it via the `CheatLib.get(id)`. 
+
+**Basic usage**
+
+The basic use-case is to enter a string and then trigger a functionality. 
+
+	CheatLib.get("demo")
+		.createCheat("test")
+			.toggledSignal
+			.add(handleTestCheatToggle);
+
+	function handleTestCheatToggle(cheat:ICheat):void
+	{
+		trace("Test cheat toggled, now " + cheat.activated);
+	}
+
+You can always get the created cheat again via the `getCheat()` method:
+
+	CheatLib.get("demo")
+		.getCheat("test");
+
+**Master cheats**
+
+With master cheats you block certain cheats until the master is activated. This would be the easiest way to just use one master cheat:
+
+	CheatLib.get("demo")
+		.createMasterCheat("master");
+	
+A more complex example, on how to use multiple master cheats will follow later.
+
+**Persistency**
+
+If you don't want to re-enter you cheats after each restart you can use the optional `persistent` flag. It stores the cheat state in the LocalSharedObject and re-initializes it on the next start. This flag needs to be set for each cheat individually.
+
+	CheatLib.get("demo")
+		.createMasterCheat("master", true);
+
+**Complex cheat codes**
+
+For more advanced cheat codes – including special keys – you can use the following syntax:
+
+	CheatLib.get("demo")
+		.addCheat(CheatBuilder.create("fps", 
+					CheatCodeBuilder.create()
+						.appendKeyCode(Keyboard.ENTER)
+						.appendString("fps")
+						.appendKeyCode(Keyboard.ENTER)
+						.build())
+					.build());
+
+In this case the cheat code consists of "Enter" + "fps" + "Enter".
+
+For more insight please check out the [example implementation](https://github.com/MattesGroeger/as3-cheats/blob/master/example/src/de/mattesgroeger/cheats/example/Demo.as).
 
 Change log
 ----------
@@ -25,62 +89,8 @@ Change log
 * **[Added]** Cheats can be optionally persisted (Local Shared Object)
 * **[Added]** Static access for easy access (`CheatLib.get(id)`)
 
-Usage
------
-
-The basic use case is to enter any string and then trigger a hidden functionality. 
-
-	function setup():void
-	{
-		var cheatLib:CheatLib = CheatLib.create(stage, "demo");
-
-		// register central listener for all cheats
-		cheatLib.toggledSignal.add(handleAllCheatsToggle);
-
-		// persistent master cheat
-		cheatLib.createMasterCheat("master", true);
-
-		// not persistent cheat
-		cheatLib.createCheat("bart");
-
-		// persistent cheat with custom toggle listener
-		cheatLib.createCheat("lisa", true)
-			.toggledSignal
-			.add(handleLisaCheatToggle);
-	}
-	
-	function handleAllCheatsToggle(cheat:ICheat):void
-	{
-		trace("Cheat " + cheat.id + " " + cheat.activated);
-	}
-
-	function handleLisaCheatToggle(cheat:ICheat):void
-	{
-		trace("Cheat 'lisa' (custom listener) " + cheat.activated);
-	}
-
-For more advanced cheat codes you can use the following syntax:
-
-	var cheat3:Cheat = CheatBuilder.create("fps", 
-							CheatCodeBuilder.create()
-								.appendKeyCode(Keyboard.ENTER)
-								.appendString("fps")
-								.appendKeyCode(Keyboard.ENTER)
-								.build())
-							.setLabel("FPS")
-							.build();
-	cheatLib.addCheat(cheat3);
-	cheat3.toggledSignal.add(handleAllCheatsToggle);
-
-Access your cheats anywhere by static access:
-
-	trace("master cheat active: " + 
-				CheatLib.get("demo")
-					.getCheat("master")
-					.activated);
-
 Roadmap
 -------
 
-- Write documentation for `CheatLib` and `ICheat`
+- Write as-docs for `CheatLib` and `ICheat`
 - Default debug output for cheat toggle
