@@ -21,6 +21,7 @@
  */
 package de.mattesgroeger.cheats.example
 {
+	import de.mattesgroeger.cheats.ICheatLib;
 	import de.mattesgroeger.cheats.CheatLib;
 	import de.mattesgroeger.cheats.model.CheatBuilder;
 	import de.mattesgroeger.cheats.model.CheatCodeBuilder;
@@ -31,11 +32,11 @@ package de.mattesgroeger.cheats.example
 
 	public class Demo extends Sprite
 	{
-		private var cheatLib:CheatLib;
+		private var cheatLib:ICheatLib;
 		
 		public function Demo()
 		{
-			cheatLib = new CheatLib(stage, "demo");
+			cheatLib = CheatLib.create(stage, "demo");
 			
 			// register central listener for all cheats
 			cheatLib.toggledSignal.add(handleAllCheatsToggle);

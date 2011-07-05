@@ -43,6 +43,46 @@ package de.mattesgroeger.cheats
 
 		[Mock]
 		public var stage:IEventDispatcher;
+		
+		[Test]
+		public function should_create_and_return():void
+		{
+			var cheatLib:ICheatLib = CheatLib.create(stage, "test");
+			
+			assertThat(cheatLib, equalTo(CheatLib.get("test")));
+		}
+
+		[Test]
+		public function should_fail_because_no_cheatlib_created():void
+		{
+			try
+			{
+				CheatLib.get("abc");
+			}
+			catch (e:IllegalOperationError)
+			{
+				return;
+			}
+			
+			fail("Error expected");
+		}
+
+		[Test]
+		public function should_fail_because_cheatlib_with_same_id_already_exists():void
+		{
+			CheatLib.create(stage, "c");
+			
+			try
+			{
+				CheatLib.create(stage, "c");
+			}
+			catch (e:IllegalOperationError)
+			{
+				return;
+			}
+			
+			fail("Error expected");
+		}
 
 		[Test]
 		public function should_create_cheat():void

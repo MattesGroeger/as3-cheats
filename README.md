@@ -31,7 +31,7 @@ The basic use case is to enter any string and then trigger a hidden functionalit
 
 	function setup():void
 	{
-		var cheatLib:CheatLib = new CheatLib(stage, "demo");
+		var cheatLib:CheatLib = CheatLib.create(stage, "demo");
 
 		// register central listener for all cheats
 		cheatLib.toggledSignal.add(handleAllCheatsToggle);

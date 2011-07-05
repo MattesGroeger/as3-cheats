@@ -21,6 +21,7 @@
  */
 package de.mattesgroeger.cheats
 {
+	import flash.utils.Dictionary;
 	import de.mattesgroeger.cheats.controller.CheatObserver;
 	import de.mattesgroeger.cheats.controller.ICheatsProvider;
 	import de.mattesgroeger.cheats.model.Cheat;
@@ -37,8 +38,10 @@ package de.mattesgroeger.cheats
 	
 	use namespace cheat_internal;
 	
-	public class CheatLib implements ICheatsProvider
+	public class CheatLib implements ICheatsProvider, ICheatLib
 	{
+		private static var cheatLibs:Dictionary = new Dictionary();
+		
 		private var _timeoutMs:uint;
 		private var _masterCheat:Cheat;
 		private var _cheats:Vector.<Cheat>;
@@ -46,12 +49,32 @@ package de.mattesgroeger.cheats
 		private var _sharedObject:SharedObject;
 		private var _toggledSignal:Signal = new Signal(ICheat);
 
-		public function CheatLib(stage:IEventDispatcher, name:String, timeoutMs:uint = 3000)
+		public static function create(stage:IEventDispatcher, id:String, timeoutMs:uint = 3000):ICheatLib
+		{
+			if (cheatLibs[id] != null)
+				throw new IllegalOperationError("A CheatLib was already registered for id " + id + ". Make sure to not call create() twice with the same id!");
+			
+			var cheatLib:CheatLib = new CheatLib(stage, id, timeoutMs);
+			
+			cheatLibs[id] = cheatLib;
+			
+			return cheatLib;
+		}
+		
+		public static function get(id:String):ICheatLib
+		{
+			if (cheatLibs[id] == null)
+				throw new IllegalOperationError("No CheatLib registered for id " + id + ". Make sure to create() one before!");
+			
+			return cheatLibs[id];
+		}
+
+		public function CheatLib(stage:IEventDispatcher, id:String, timeoutMs:uint = 3000)
 		{
 			_timeoutMs = timeoutMs;
 			_cheats = new Vector.<Cheat>();
 			_cheatObserver = new CheatObserver(stage, this);
-			_sharedObject = SharedObject.getLocal(name);
+			_sharedObject = SharedObject.getLocal(id);
 		}
 
 		public function get toggledSignal():ISignal
