@@ -21,6 +21,7 @@
  */
 package
 {
+	import de.mattesgroeger.cheats.CheatLibTest;
 	import de.mattesgroeger.cheats.controller.CheatObserverTest;
 	import de.mattesgroeger.cheats.model.CheatBuilderTest;
 	import de.mattesgroeger.cheats.model.CheatCodeBuilderTest;
@@ -32,6 +33,7 @@ package
 	[RunWith("org.flexunit.runners.Suite")]
 	public class CheatsTestSuite
 	{
+		public var cheatLibTest:CheatLibTest;
 		public var keyCodeUtilTest:KeyCodeUtilTest;
 		public var cheatTest:CheatTest;
 		public var cheatBuilderTest:CheatBuilderTest;

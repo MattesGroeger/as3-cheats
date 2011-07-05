@@ -22,7 +22,6 @@
 package de.mattesgroeger.cheats.example
 {
 	import de.mattesgroeger.cheats.CheatLib;
-	import de.mattesgroeger.cheats.model.Cheat;
 	import de.mattesgroeger.cheats.model.CheatBuilder;
 	import de.mattesgroeger.cheats.model.CheatCodeBuilder;
 	import de.mattesgroeger.cheats.model.ICheat;
@@ -37,38 +36,40 @@ package de.mattesgroeger.cheats.example
 		public function Demo()
 		{
 			cheatLib = new CheatLib(stage, "demo");
+			
+			// register central listener for all cheats
+			cheatLib.toggledSignal.add(handleAllCheatsToggle);
 
 			// persistent master cheat
-			cheatLib.createMasterCheat("master", true)
-				.toggledSignal
-				.add(handleCheatToggle);
+			cheatLib.createMasterCheat("master", true);
 			
 			// not persistent cheat
-			cheatLib.createCheat("bart")
-				.toggledSignal
-				.add(handleCheatToggle);
+			cheatLib.createCheat("bart");
 
-			// persistent cheat
+			// persistent cheat with custom toggle listener
 			cheatLib.createCheat("lisa", true)
 				.toggledSignal
-				.add(handleCheatToggle);
+				.add(handleLisaCheatToggle);
 
 			// cheat with complex code
-			var cheat3:Cheat = CheatBuilder.create("fps", 
+			cheatLib.addCheat(CheatBuilder.create("fps", 
 									CheatCodeBuilder.create()
 										.appendKeyCode(Keyboard.ENTER)
 										.appendString("fps")
 										.appendKeyCode(Keyboard.ENTER)
 										.build())
 									.setLabel("FPS")
-									.build();
-			cheatLib.addCheat(cheat3);
-			cheat3.toggledSignal.add(handleCheatToggle);
+									.build());
 		}
 
-		private function handleCheatToggle(cheat:ICheat):void
+		private function handleLisaCheatToggle(cheat:ICheat):void
 		{
-			trace("Cheat " + cheat.id + " " + cheat.activated);
+			trace("Cheat 'lisa' (custom listener) " + cheat.activated);
+		}
+
+		private function handleAllCheatsToggle(cheat:ICheat):void
+		{
+			trace("Cheat '" + cheat.id + "' " + cheat.activated);
 		}
 	}
 }

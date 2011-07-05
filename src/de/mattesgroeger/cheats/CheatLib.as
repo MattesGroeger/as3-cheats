@@ -28,6 +28,9 @@ package de.mattesgroeger.cheats
 	import de.mattesgroeger.cheats.model.ICheat;
 	import de.mattesgroeger.cheats.model.ICheatCode;
 
+	import org.osflash.signals.ISignal;
+	import org.osflash.signals.Signal;
+
 	import flash.errors.IllegalOperationError;
 	import flash.events.IEventDispatcher;
 	import flash.net.SharedObject;
@@ -41,6 +44,7 @@ package de.mattesgroeger.cheats
 		private var _cheats:Vector.<Cheat>;
 		private var _cheatObserver:CheatObserver;
 		private var _sharedObject:SharedObject;
+		private var _toggledSignal:Signal = new Signal(ICheat);
 
 		public function CheatLib(stage:IEventDispatcher, name:String, timeoutMs:uint = 3000)
 		{
@@ -48,6 +52,11 @@ package de.mattesgroeger.cheats
 			_cheats = new Vector.<Cheat>();
 			_cheatObserver = new CheatObserver(stage, this);
 			_sharedObject = SharedObject.getLocal(name);
+		}
+
+		public function get toggledSignal():ISignal
+		{
+			return _toggledSignal;
 		}
 
 		public function get cheats():Vector.<Cheat>
@@ -62,6 +71,13 @@ package de.mattesgroeger.cheats
 			
 			_masterCheat = registerCheat(code, persist, label);
 			
+			updateMasterCheatInExistingOnes();
+			
+			return _masterCheat;
+		}
+
+		private function updateMasterCheatInExistingOnes():void
+		{
 			for each (var cheat:Cheat in _cheats)
 			{
 				if (cheat == _masterCheat)
@@ -69,8 +85,6 @@ package de.mattesgroeger.cheats
 				
 				cheat.parent = _masterCheat;
 			}
-			
-			return _masterCheat;
 		}
 
 		public function createCheat(code:String, persist:Boolean = false, label:String = null):ICheat
@@ -86,12 +100,14 @@ package de.mattesgroeger.cheats
 			if (persist)
 				cheat.sharedObject = _sharedObject;
 			
+			cheat.toggledSignal.add(delegateToggledSignal);
+			
 			_cheats.push(cheat);
 		}
 
 		private function registerCheat(code:String, persist:Boolean, label:String):Cheat
 		{
-			var cheatCode : ICheatCode = CheatCodeBuilder.create()
+			var cheatCode:ICheatCode = CheatCodeBuilder.create()
 											.appendString(code)
 											.build();
 			
@@ -103,9 +119,16 @@ package de.mattesgroeger.cheats
 			if (persist)
 				cheat.sharedObject = _sharedObject;
 			
+			cheat.toggledSignal.add(delegateToggledSignal);
+			
 			_cheats.push(cheat);
 			
 			return cheat;
+		}
+
+		private function delegateToggledSignal(cheat:ICheat):void
+		{
+			_toggledSignal.dispatch(cheat);
 		}
 
 		public function destroy():void

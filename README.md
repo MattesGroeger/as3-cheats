@@ -22,6 +22,7 @@ Change log
 * **[Added]** Cheats can be toggled (on/off)
 * **[Added]** Master Cheat support
 * **[Added]** Cheats can be optionally persisted within local ShardObject
+* **[Added]** Global Toggled Signal for all cheats via CheatLib
 
 Usage
 -----
