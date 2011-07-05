@@ -87,6 +87,17 @@ package de.mattesgroeger.cheats
 			return _cheats;
 		}
 
+		public function getCheat(id:String):ICheat
+		{
+			for each (var cheat:Cheat in _cheats)
+			{
+				if (cheat.id == id)
+					return cheat;
+			}
+			
+			throw new IllegalOperationError("No cheat found for id " + id + "!");
+		}
+
 		public function createMasterCheat(code:String, persist:Boolean = false, label:String = null):ICheat
 		{
 			if (_masterCheat != null)

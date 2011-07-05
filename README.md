@@ -23,6 +23,7 @@ Change log
 * **[Added]** Per cheat and global toggled Signal
 * **[Added]** Master Cheat support
 * **[Added]** Cheats can be optionally persisted (Local Shared Object)
+* **[Added]** Static access for easy access (`CheatLib.get(id)`)
 
 Usage
 -----
@@ -71,10 +72,15 @@ For more advanced cheat codes you can use the following syntax:
 	cheatLib.addCheat(cheat3);
 	cheat3.toggledSignal.add(handleAllCheatsToggle);
 
+Access your cheats anywhere by static access:
+
+	trace("master cheat active: " + 
+				CheatLib.get("demo")
+					.getCheat("master")
+					.activated);
+
 Roadmap
 -------
 
-- Finalize API for first release version (0.0.1)
 - Write documentation for `CheatLib` and `ICheat`
-- Allow central signal listener registration in `CheatLib`
-- Display cheat success (optional)
+- Default debug output for cheat toggle

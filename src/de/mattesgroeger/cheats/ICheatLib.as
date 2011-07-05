@@ -36,6 +36,8 @@ package de.mattesgroeger.cheats
 
 		function addCheat(cheat:Cheat, persist:Boolean = false):void;
 		
+		function getCheat(id:String):ICheat;
+
 		function destroy():void;
 	}
 }

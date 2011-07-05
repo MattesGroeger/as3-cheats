@@ -38,21 +38,21 @@ package de.mattesgroeger.cheats.example
 		{
 			cheatLib = CheatLib.create(stage, "demo");
 			
-			// register central listener for all cheats
+			// Register central listener for all cheats
 			cheatLib.toggledSignal.add(handleAllCheatsToggle);
 
-			// persistent master cheat
+			// Persistent master cheat
 			cheatLib.createMasterCheat("master", true);
 			
-			// not persistent cheat
+			// Not persistent cheat
 			cheatLib.createCheat("bart");
 
-			// persistent cheat with custom toggle listener
+			// Persistent cheat with custom toggle listener
 			cheatLib.createCheat("lisa", true)
 				.toggledSignal
 				.add(handleLisaCheatToggle);
 
-			// cheat with complex code
+			// Cheat with complex code
 			cheatLib.addCheat(CheatBuilder.create("fps", 
 									CheatCodeBuilder.create()
 										.appendKeyCode(Keyboard.ENTER)
@@ -61,6 +61,12 @@ package de.mattesgroeger.cheats.example
 										.build())
 									.setLabel("FPS")
 									.build());
+			
+			// Access your cheats anywhere
+			trace("master cheat active: " + 
+					CheatLib.get("demo")
+						.getCheat("master")
+						.activated);
 		}
 
 		private function handleLisaCheatToggle(cheat:ICheat):void

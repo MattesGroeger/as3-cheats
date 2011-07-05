@@ -140,5 +140,42 @@ package de.mattesgroeger.cheats
 			
 			fail("Error expected!");
 		}
+
+		[Test]
+		public function sould_return_cheat_by_id():void
+		{
+			var cheatLib:CheatLib = new CheatLib(stage, "test");
+
+			var cheatA:Cheat = Cheat(cheatLib.createCheat("a"));
+			var cheatB:Cheat = CheatBuilder.create("b", CheatCodeBuilder.create().appendString("b").build()).build();
+			cheatLib.addCheat(cheatB);
+			var cheatC:Cheat = Cheat(cheatLib.createMasterCheat("c"));
+			var cheatD:Cheat = Cheat(cheatLib.createCheat("d"));
+			var cheatE:Cheat = CheatBuilder.create("e", CheatCodeBuilder.create().appendString("e").build()).build();
+			cheatLib.addCheat(cheatE);
+			
+			assertThat(cheatLib.getCheat("a"), equalTo(cheatA));
+			assertThat(cheatLib.getCheat("b"), equalTo(cheatB));
+			assertThat(cheatLib.getCheat("c"), equalTo(cheatC));
+			assertThat(cheatLib.getCheat("d"), equalTo(cheatD));
+			assertThat(cheatLib.getCheat("e"), equalTo(cheatE));
+		}
+
+		[Test]
+		public function should_throw_error_for_not_existent_cheat():void
+		{
+			var cheatLib:CheatLib = new CheatLib(stage, "test");
+			
+			try
+			{
+				cheatLib.getCheat("a");
+			}
+			catch (e:IllegalOperationError)
+			{
+				return;
+			}
+			
+			fail("Error expected!");
+		}
 	}
 }
