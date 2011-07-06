@@ -41,7 +41,7 @@ package de.mattesgroeger.cheats.model
 		[Test]
 		public function should_build_default_cheat():void
 		{
-			var cheat:ICheat = CheatBuilder.create("test", cheatCode)
+			var cheat:Cheat = CheatBuilder.create("test", cheatCode)
 								.setLabel("Label")
 								.setMasterCheat(masterCheat)
 								.build();

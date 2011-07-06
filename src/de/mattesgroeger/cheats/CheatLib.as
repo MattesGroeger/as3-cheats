@@ -21,7 +21,6 @@
  */
 package de.mattesgroeger.cheats
 {
-	import flash.utils.Dictionary;
 	import de.mattesgroeger.cheats.controller.CheatObserver;
 	import de.mattesgroeger.cheats.controller.ICheatsProvider;
 	import de.mattesgroeger.cheats.model.Cheat;
@@ -35,9 +34,17 @@ package de.mattesgroeger.cheats
 	import flash.errors.IllegalOperationError;
 	import flash.events.IEventDispatcher;
 	import flash.net.SharedObject;
+	import flash.utils.Dictionary;
 	
 	use namespace cheat_internal;
 	
+	/**
+	 * Main class of the as3-cheats library. Use the static methods
+	 * to create instances of the <tt>CheatLib</tt>.
+	 * 
+	 * @see de.mattesgroeger.cheats.CheatLib#create()
+	 * @see de.mattesgroeger.cheats.CheatLib#get()
+	 */
 	public class CheatLib implements ICheatsProvider, ICheatLib
 	{
 		private static var cheatLibs:Dictionary = new Dictionary();
@@ -48,7 +55,17 @@ package de.mattesgroeger.cheats
 		private var _cheatObserver:CheatObserver;
 		private var _sharedObject:SharedObject;
 		private var _toggledSignal:Signal = new Signal(ICheat);
-
+		
+		/**
+		 * Creates a new <tt>CheatLib</tt> instance where you can add the cheats.
+		 * 
+		 * @example <listing version="3.0">
+		 * var lib:ICheatLib = CheatLib.create(stage, "demo", 3000);</listing>
+		 * @param stage The stage of your application in order to receive the KeybordEvents
+		 * @param id Id for the <tt>CheatLib</tt> instance
+		 * @param timeoutMs Milliseconds after which the keyboard input gets resetted
+		 * @return ICheatLib
+		 */
 		public static function create(stage:IEventDispatcher, id:String, timeoutMs:uint = 3000):ICheatLib
 		{
 			if (cheatLibs[id] != null)
@@ -61,6 +78,14 @@ package de.mattesgroeger.cheats
 			return cheatLib;
 		}
 		
+		/**
+		 * Returns a previously created <tt>CheatLib</tt> by id.
+		 * 
+		 * @example <listing version="3.0">
+		 * var lib:ICheatLib = CheatLib.get("demo");</listing>
+		 * @param id Id of the <tt>CheatLib</tt> instance
+		 * @return ICheatLib
+		 */
 		public static function get(id:String):ICheatLib
 		{
 			if (cheatLibs[id] == null)
@@ -69,6 +94,9 @@ package de.mattesgroeger.cheats
 			return cheatLibs[id];
 		}
 
+		/**
+		 * @private
+		 */
 		public function CheatLib(stage:IEventDispatcher, id:String, timeoutMs:uint = 3000)
 		{
 			_timeoutMs = timeoutMs;
@@ -76,17 +104,26 @@ package de.mattesgroeger.cheats
 			_cheatObserver = new CheatObserver(stage, this);
 			_sharedObject = SharedObject.getLocal(id);
 		}
-
+		
+		/**
+		 * @inheritDoc
+		 */
 		public function get toggledSignal():ISignal
 		{
 			return _toggledSignal;
 		}
-
+		
+		/**
+		 * @private
+		 */
 		public function get cheats():Vector.<Cheat>
 		{
 			return _cheats;
 		}
 
+		/**
+		 * @inheritDoc
+		 */
 		public function getCheat(id:String):ICheat
 		{
 			for each (var cheat:Cheat in _cheats)
@@ -98,6 +135,9 @@ package de.mattesgroeger.cheats
 			throw new IllegalOperationError("No cheat found for id " + id + "!");
 		}
 
+		/**
+		 * @inheritDoc
+		 */
 		public function createMasterCheat(code:String, persist:Boolean = false, label:String = null):ICheat
 		{
 			if (_masterCheat != null)
@@ -121,11 +161,17 @@ package de.mattesgroeger.cheats
 			}
 		}
 
+		/**
+		 * @inheritDoc
+		 */
 		public function createCheat(code:String, persist:Boolean = false, label:String = null):ICheat
 		{
 			return registerCheat(code, persist, label);
 		}
-
+		
+		/**
+		 * @inheritDoc
+		 */
 		public function addCheat(cheat:Cheat, persist:Boolean = false):void
 		{
 			if (_masterCheat)
@@ -165,8 +211,14 @@ package de.mattesgroeger.cheats
 			_toggledSignal.dispatch(cheat);
 		}
 
+		/**
+		 * @inheritDoc
+		 */
 		public function destroy():void
 		{
+			for each (var cheat:Cheat in _cheats)
+				cheat.toggledSignal.remove(delegateToggledSignal);
+			
 			_cheatObserver.destroy();
 			_cheats = null;
 			_masterCheat = null;

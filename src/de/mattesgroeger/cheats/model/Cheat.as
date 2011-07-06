@@ -54,31 +54,49 @@ package de.mattesgroeger.cheats.model
 				_parent.addChild(this);
 		}
 
+		/**
+		 * @inheritDoc
+		 */
 		public function get id():String
 		{
 			return _id;
 		}
 
+		/**
+		 * @private
+		 */
 		public function get code():ICheatCode
 		{
 			return _code;
 		}
 
+		/**
+		 * @private
+		 */
 		public function set label(label:String):void
 		{
 			_label = label;
 		}
 
+		/**
+		 * @inheritDoc
+		 */
 		public function get label():String
 		{
 			return _label;
 		}
 
+		/**
+		 * @inheritDoc
+		 */
 		public function get toggledSignal():ISignal
 		{
 			return _toggledSignal;
 		}
 
+		/**
+		 * @private
+		 */
 		public function set activated(activated:Boolean):void
 		{
 			if (!parentActivated())
@@ -93,11 +111,17 @@ package de.mattesgroeger.cheats.model
 			storeState();
 		}
 
+		/**
+		 * @inheritDoc
+		 */
 		public function get activated():Boolean
 		{
 			return (parentActivated()) ? _activated : false;
 		}
-
+		
+		/**
+		 * @private
+		 */
 		public function toggle():void
 		{
 			if (!parentActivated())

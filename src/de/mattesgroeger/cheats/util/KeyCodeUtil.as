@@ -25,7 +25,7 @@ package de.mattesgroeger.cheats.util
 	
 	/**
 	 * Based on <tt>KeyCodeUtil.as</tt> of 
-	 * Andy Li (andy@onthewings.net)
+	 * Andy Li (andy(at)onthewings.net)
 	 * 2009-11-02
 	 */
 	public class KeyCodeUtil

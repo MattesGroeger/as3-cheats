@@ -25,19 +25,141 @@ package de.mattesgroeger.cheats
 	import de.mattesgroeger.cheats.model.ICheat;
 
 	import org.osflash.signals.ISignal;
-
+	
+	/**
+	 * Main interface for using the as3-cheats library. It is returned by
+	 * using the <tt>CheatLib.create()</tt> method.
+	 * 
+	 * @see de.mattesgroeger.cheats.CheatLib#create()
+	 */
 	public interface ICheatLib
 	{
+		/**
+		 * The Signal gets dispatched whenever a cheat has been 
+		 * activated/deactivated (toggled). The registered listener 
+		 * function needs to have one parameter of type 
+		 * <tt>ICheat</tt>.
+		 * 
+		 * <p>Use this signal for logic that should be executed for
+		 * all cheats of this <tt>ICheatLib</tt> instance.</p>
+		 * 
+		 * <p>If you are interested in toggle signals of specific cheats, 
+		 * than register for appropriate the signal in the <tt>ICheat</tt> 
+		 * interface.</p>
+		 * 
+		 * @example <listing version="3.0">
+		 * CheatLib.get("demo")
+		 *     .toggledSignal
+		 *     .add(handleToggle);
+		 * 
+		 * function handleToggle(cheat:ICheat):void
+		 * {
+		 *     trace("Cheat '" + cheat.id + "' " + cheat.activated);
+		 * }</listing>
+		 * @see de.mattesgroeger.cheats.model.ICheat
+		 */
 		function get toggledSignal():ISignal;
-
+		
+		/**
+		 * With a master cheat you block other cheats in the same 
+		 * <tt>ICheatLib</tt> instance until the master cheat has been activated.
+		 * 
+		 * <p>The <tt>code</tt> needs to be a <tt>String</tt>. Internally it uses 
+		 * this <tt>code</tt> also as <tt>id</tt> for the cheat. For more complex 
+		 * cheat <tt>codes</tt> read the documentation of <tt>addCheat()</tt></p>
+		 * 
+		 * <p>Optionally you can set the <tt>persist</tt> flag in order to store the 
+		 * state of the master cheat in the local shared object. The state will be
+		 * stored under the <tt>id</tt> of the <tt>ICheatLib</tt> and <tt>ICheat</tt> 
+		 * instance to prevent overlapping with other instances.</p>
+		 * 
+		 * @example <listing version="3.0">
+		 * CheatLib.get("demo")
+		 *     .createMasterCheat("master", true, "Master");</listing>
+		 * @see de.mattesgroeger.cheats.ICheatLib#createCheat()
+		 * @see de.mattesgroeger.cheats.ICheatLib#addCheat()
+		 * @param code The string that has to be entered for triggering the cheat
+		 * @param persist If the state should be stored in the local shared object
+		 * @param label Can be used for debug output
+		 * @return ICheat
+		 */
 		function createMasterCheat(code:String, persist:Boolean = false, label:String = null):ICheat;
 
+		/**
+		 * A cheat can be activated/deactivated (toggled) by key <tt>codes</tt>.
+		 * 
+		 * <p>The <tt>code</tt> needs to be a <tt>String</tt>. Internally it uses 
+		 * this <tt>code</tt> also as <tt>id</tt> for the cheat. For more complex 
+		 * cheat <tt>codes</tt> read the documentation of <tt>addCheat()</tt></p>
+		 * 
+		 * <p>Optionally you can set the <tt>persist</tt> flag in order to store the 
+		 * state of the master cheat in the local shared object. The state will be
+		 * stored under the <tt>id</tt> of the <tt>ICheatLib</tt> and <tt>ICheat</tt> 
+		 * instance to prevent overlapping with other instances.</p>
+		 * 
+		 * @example <listing version="3.0">
+		 * CheatLib.get("demo")
+		 *     .createCheat("test", false, "Test");</listing>
+		 * @see de.mattesgroeger.cheats.ICheatLib#createMasterCheat()
+		 * @see de.mattesgroeger.cheats.ICheatLib#addCheat()
+		 * @param code The string that has to be entered for triggering the cheat
+		 * @param persist If the state should be stored in the local shared object
+		 * @param label Can be used for debug output
+		 * @return ICheat
+		 */
 		function createCheat(code:String, persist:Boolean = false, label:String = null):ICheat;
 
+		/**
+		 * Allows to add externally created <tt>Cheat</tt> instances.
+		 * 
+		 * <p>Using this method gives more possibilies to configure the actual
+		 * <tt>Cheat</tt> instance. It allows for example to define a more complex
+		 * key code that also includes special keys (see the example).</p>
+		 * 
+		 * <p>If you don't need this freedom, you can use the <tt>createCheat()</tt> 
+		 * method. It creates the <tt>Cheat</tt> instance internally for you.</p>
+		 * 
+		 * <p>Optionally you can set the <tt>persist</tt> flag in order to store the 
+		 * state of the master cheat in the local shared object. The state will be
+		 * stored under the <tt>id</tt> of the <tt>ICheatLib</tt> and <tt>ICheat</tt> 
+		 * instance to prevent overlapping with other instances.</p>
+		 * 
+		 * @example <listing version="3.0">
+		 * CheatLib.get("demo")
+		 *     .addCheat(CheatBuilder.create("fps", 
+		 *                 CheatCodeBuilder.create()
+		 *                     .appendKeyCode(Keyboard.ENTER)
+		 *                     .appendString("fps")
+		 *                     .appendKeyCode(Keyboard.ENTER)
+		 *                     .build())
+		 *                 .build());</listing>
+		 * @see de.mattesgroeger.cheats.ICheatLib#addCheat()
+		 * @see de.mattesgroeger.cheats.model.CheatBuilder
+		 * @see de.mattesgroeger.cheats.model.CheatCodeBuilder
+		 * @param cheat The cheat that should be used
+		 * @param persist If the state should be stored in the local shared object
+		 * @return void
+		 */
 		function addCheat(cheat:Cheat, persist:Boolean = false):void;
 		
+		/**
+		 * Returns a previously added or created cheat by <tt>id</tt>.
+		 * 
+		 * <p>In case of an cheat that has been created via the <tt>createCheat()</tt>
+		 * or <tt>createMasterCheat()</tt> methods the <tt>code</tt> is used as 
+		 * <tt>id</tt>.</p>
+		 * 
+		 * @example <listing version="3.0">
+		 * CheatLib.get("demo")
+		 *     .getCheat("test");</listing>
+		 * @param id Id that was set before for the cheat
+		 * @return ICheat
+		 */
 		function getCheat(id:String):ICheat;
-
+		
+		/**
+		 * Destroys the <tt>ICheatLib</tt> instance. Removes all internal references.
+		 */
 		function destroy():void;
 	}
 }

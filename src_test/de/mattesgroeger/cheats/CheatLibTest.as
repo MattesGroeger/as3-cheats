@@ -24,7 +24,6 @@ package de.mattesgroeger.cheats
 	import de.mattesgroeger.cheats.model.Cheat;
 	import de.mattesgroeger.cheats.model.CheatBuilder;
 	import de.mattesgroeger.cheats.model.CheatCodeBuilder;
-	import de.mattesgroeger.cheats.model.ICheat;
 
 	import org.flexunit.assertThat;
 	import org.flexunit.asserts.fail;
@@ -89,7 +88,7 @@ package de.mattesgroeger.cheats
 		{
 			var cheatLib:CheatLib = new CheatLib(stage, "test");
 
-			var cheat:ICheat = cheatLib.createCheat("abc");
+			var cheat:Cheat = Cheat(cheatLib.createCheat("abc"));
 			
 			assertThat(cheat.id, equalTo("abc"));
 			assertThat(cheat.code.keyCodeAt(0), equalTo(65));
