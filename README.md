@@ -5,14 +5,14 @@ This library provides an easy way to handle cheats within flash. Register a key 
 
 **Use cases for this library:**
 
-- Enable certain functionalities in live environments which should be normally deactivated (e.g. logging)
+- Enable functionalities in live environments which should be normally deactivated (e.g. logging)
 - Use cheats within games
-- Provide easter egg triggers
-- Persist cheats so you don't have to re-enter them again and again
+- Trigger easter eggs
 
 **Dependencies**
 
-This library is compiled against *as3-signals-v0.7*. You can download the latest version here:  [GitHub](https://github.com/robertpenner/as3-signals)
+This library is compiled against *as3-signals-v0.7*. The swc is included in the download file.
+More information regarding as3-signals can be [found here](https://github.com/robertpenner/as3-signals).
 
 Usage
 -----
@@ -80,7 +80,7 @@ For more insight please check out the [example implementation](https://github.co
 Change log
 ----------
 
-**0.0.1**
+**0.0.1** (2011/07/07)
 
 * **[Added]** Cheat functionality for any combination of strings and special keys
 * **[Added]** Cheats can be toggled (on/off)
@@ -92,5 +92,4 @@ Change log
 Roadmap
 -------
 
-- Write as-docs for `CheatLib` and `ICheat`
 - Default debug output for cheat toggle
