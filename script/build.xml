@@ -20,6 +20,7 @@
 	</target>
 	
 	<target name="generate asdoc" description="Generate documentation" depends="properties">
+		<mkdir dir="${docs.local.dir}"/>
 		<delete includeemptydirs="true">
 			<fileset dir="${docs.local.dir}" includes="**/*" />
 		</delete>
