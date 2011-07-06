@@ -28,13 +28,15 @@
 			<arg line="-l '${libs.dir}'" />
 			<arg line="-sp '${src.dir}'" />
 			<arg line="-ds '${src.dir}' " />
+			<arg line="-target-player ${target.player}" />
 			<arg line="-window-title 'Adobe ActionScript 3.0 Library - ${project.title}'" />
 		</exec>
 	</target>
 	
-	<target name="create zip" description="create download zip" depends="compile swc">
+	<target name="create zip" description="create download zip" depends="compile swc,generate asdoc">
 		<mkdir dir="${deploy.dir}/zip/dependencies"/>
 		<mkdir dir="${deploy.dir}/zip/release"/>
+		<mkdir dir="${deploy.dir}/zip/docs"/>
 		<copy todir="${deploy.dir}/zip/release">
 			<fileset dir="${deploy.dir}">
 				<include name="*.swc"/>
@@ -42,7 +44,12 @@
 		</copy>
 		<copy todir="${deploy.dir}/zip/dependencies">
 			<fileset dir="${libs.dir}">
-				<include name="spicelib-*.swc"/>
+				<include name="as3-signals-v*.swc"/>
+			</fileset>
+		</copy>
+		<copy todir="${deploy.dir}/zip/docs">
+			<fileset dir="${docs.local.dir}">
+				<include name="**"/>
 			</fileset>
 		</copy>
 		<zip destfile="${deploy.dir}/${binary.name}.zip">
