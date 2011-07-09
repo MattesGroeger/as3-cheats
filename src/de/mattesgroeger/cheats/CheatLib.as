@@ -27,6 +27,8 @@ package de.mattesgroeger.cheats
 	import de.mattesgroeger.cheats.model.CheatCodeBuilder;
 	import de.mattesgroeger.cheats.model.ICheat;
 	import de.mattesgroeger.cheats.model.ICheatCode;
+	import de.mattesgroeger.cheats.view.DefaultCheatView;
+	import de.mattesgroeger.cheats.view.ICheatView;
 
 	import org.osflash.signals.ISignal;
 	import org.osflash.signals.Signal;
@@ -54,19 +56,20 @@ package de.mattesgroeger.cheats
 		private var _cheats:Vector.<Cheat>;
 		private var _cheatObserver:CheatObserver;
 		private var _sharedObject:SharedObject;
+		private var _cheatView:ICheatView;
 		private var _toggledSignal:Signal = new Signal(ICheat);
 		
 		/**
 		 * Creates a new <tt>CheatLib</tt> instance where you can add the cheats.
 		 * 
 		 * @example <listing version="3.0">
-		 * var lib:ICheatLib = CheatLib.create(stage, "demo", 3000);</listing>
+		 * var lib:ICheatLib = CheatLib.create(stage, "demo", 2000);</listing>
 		 * @param stage The stage of your application in order to receive the KeybordEvents
 		 * @param id Id for the <tt>CheatLib</tt> instance
 		 * @param timeoutMs Milliseconds after which the keyboard input gets resetted
 		 * @return ICheatLib
 		 */
-		public static function create(stage:IEventDispatcher, id:String, timeoutMs:uint = 3000):ICheatLib
+		public static function create(stage:IEventDispatcher, id:String, timeoutMs:uint = 2000):ICheatLib
 		{
 			if (cheatLibs[id] != null)
 				throw new IllegalOperationError("A CheatLib was already registered for id " + id + ". Make sure to not call create() twice with the same id!");
@@ -97,12 +100,26 @@ package de.mattesgroeger.cheats
 		/**
 		 * @private
 		 */
-		public function CheatLib(stage:IEventDispatcher, id:String, timeoutMs:uint = 3000)
+		public function CheatLib(stage:IEventDispatcher, id:String, timeoutMs:uint = 2000)
 		{
 			_timeoutMs = timeoutMs;
 			_cheats = new Vector.<Cheat>();
 			_cheatObserver = new CheatObserver(stage, this);
 			_sharedObject = SharedObject.getLocal(id);
+			_cheatView = new DefaultCheatView(stage);
+		}
+		
+		/**
+		 * @inheritDoc
+		 */
+		public function get cheatView():ICheatView
+		{
+			return _cheatView;
+		}
+
+		public function set cheatView(cheatView:ICheatView):void
+		{
+			_cheatView = cheatView;
 		}
 		
 		/**
@@ -180,7 +197,7 @@ package de.mattesgroeger.cheats
 			if (persist)
 				cheat.sharedObject = _sharedObject;
 			
-			cheat.toggledSignal.add(delegateToggledSignal);
+			cheat.toggledSignal.add(handleToggledSignal);
 			
 			_cheats.push(cheat);
 		}
@@ -199,15 +216,16 @@ package de.mattesgroeger.cheats
 			if (persist)
 				cheat.sharedObject = _sharedObject;
 			
-			cheat.toggledSignal.add(delegateToggledSignal);
+			cheat.toggledSignal.add(handleToggledSignal);
 			
 			_cheats.push(cheat);
 			
 			return cheat;
 		}
 
-		private function delegateToggledSignal(cheat:ICheat):void
+		private function handleToggledSignal(cheat:ICheat):void
 		{
+			_cheatView.cheatToggled(cheat);
 			_toggledSignal.dispatch(cheat);
 		}
 
@@ -217,11 +235,13 @@ package de.mattesgroeger.cheats
 		public function destroy():void
 		{
 			for each (var cheat:Cheat in _cheats)
-				cheat.toggledSignal.remove(delegateToggledSignal);
+				cheat.toggledSignal.remove(handleToggledSignal);
 			
+			_cheatView.destroy();
 			_cheatObserver.destroy();
 			_cheats = null;
 			_masterCheat = null;
+			_cheatView = null;
 		}
 	}
 }

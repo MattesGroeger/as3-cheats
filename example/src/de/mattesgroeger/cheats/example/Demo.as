@@ -29,7 +29,8 @@ package de.mattesgroeger.cheats.example
 
 	import flash.display.Sprite;
 	import flash.ui.Keyboard;
-
+	
+	[SWF(backgroundColor="#ffffff", frameRate="31", width="550", height="400")]
 	public class Demo extends Sprite
 	{
 		private var cheatLib:ICheatLib;
@@ -42,7 +43,7 @@ package de.mattesgroeger.cheats.example
 			cheatLib.toggledSignal.add(handleAllCheatsToggle);
 
 			// Persistent master cheat
-			cheatLib.createMasterCheat("master", true);
+			cheatLib.createMasterCheat("master", true, "Cheats");
 			
 			// Not persistent cheat
 			cheatLib.createCheat("bart");
