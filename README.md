@@ -81,7 +81,7 @@ To display cheat toggles this library provides several default implementations. 
 
 And this is how it looks like for a master cheat toggle:
 
-![Notification output example](assets/example.png "Notification output example")
+![Notification output example](https://github.com/MattesGroeger/as3-cheats/blob/master/assets/example.png?raw=true "Notification output example")
 
 Beside this visual output the library comes with a `TraceOutput` which just traces all cheat toggles. By default the `CheatLib` uses the `NoOutput` which doesn't do anything.
 
