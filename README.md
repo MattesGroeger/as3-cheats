@@ -122,4 +122,4 @@ Change log
 Roadmap
 -------
 
-- Default debug output for cheat toggle
+- Anything missing? [Please let me know](https://github.com/MattesGroeger).
