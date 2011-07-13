@@ -21,6 +21,7 @@
  */
 package de.mattesgroeger.cheats.example
 {
+	import de.mattesgroeger.cheats.view.NotificationOutput;
 	import de.mattesgroeger.cheats.ICheatLib;
 	import de.mattesgroeger.cheats.CheatLib;
 	import de.mattesgroeger.cheats.model.CheatBuilder;
@@ -38,6 +39,9 @@ package de.mattesgroeger.cheats.example
 		public function Demo()
 		{
 			cheatLib = CheatLib.create(stage, "demo");
+			
+			// Set the notification output to see cheat changes visually
+			cheatLib.output = new NotificationOutput(stage);
 			
 			// Register central listener for all cheats
 			cheatLib.toggledSignal.add(handleAllCheatsToggle);

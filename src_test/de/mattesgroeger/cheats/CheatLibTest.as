@@ -21,14 +21,19 @@
  */
 package de.mattesgroeger.cheats
 {
+	import org.mockito.integrations.times;
+	import org.mockito.integrations.verify;
 	import de.mattesgroeger.cheats.model.Cheat;
 	import de.mattesgroeger.cheats.model.CheatBuilder;
 	import de.mattesgroeger.cheats.model.CheatCodeBuilder;
+	import de.mattesgroeger.cheats.view.ICheatOutput;
+	import de.mattesgroeger.cheats.view.NoOutput;
 
 	import org.flexunit.assertThat;
 	import org.flexunit.asserts.fail;
 	import org.flexunit.rules.IMethodRule;
 	import org.hamcrest.object.equalTo;
+	import org.hamcrest.object.instanceOf;
 	import org.hamcrest.object.nullValue;
 	import org.mockito.integrations.flexunit4.MockitoRule;
 
@@ -43,11 +48,18 @@ package de.mattesgroeger.cheats
 		[Mock]
 		public var stage:IEventDispatcher;
 		
+		[Mock]
+		public var output1:ICheatOutput;
+		
+		[Mock]
+		public var output2:ICheatOutput;
+		
 		[Test]
 		public function should_create_and_return():void
 		{
 			var cheatLib:ICheatLib = CheatLib.create(stage, "test");
 			
+			assertThat(cheatLib.output, instanceOf(NoOutput));
 			assertThat(cheatLib, equalTo(CheatLib.get("test")));
 		}
 
@@ -175,6 +187,26 @@ package de.mattesgroeger.cheats
 			}
 			
 			fail("Error expected!");
+		}
+		
+		[Test]
+		public function should_set_output():void
+		{
+			var cheatLib:CheatLib = new CheatLib(stage, "test");
+			
+			cheatLib.output = output1;
+			
+			assertThat(cheatLib.output, equalTo(output1));
+		}
+		
+		[Test]
+		public function should_destroy_old_output():void
+		{
+			var cheatLib:CheatLib = new CheatLib(stage, "test");
+			cheatLib.output = output1;
+			cheatLib.output = output2;
+			
+			verify(times(1)).that(output1.destroy());
 		}
 	}
 }

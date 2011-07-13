@@ -23,10 +23,22 @@ package de.mattesgroeger.cheats.view
 {
 	import de.mattesgroeger.cheats.model.ICheat;
 
-	public interface ICheatView
+	public interface ICheatOutput
 	{
+		/**
+		 * Will be called whenever a cheat of the corresponding 
+		 * <tt>CheatLib</tt> had been toggled.
+		 * 
+		 * @return void
+		 */
 		function cheatToggled(cheat:ICheat):void;
-
+		
+		/**
+		 * Will be called whenever the corresponding <tt>CheatLib</tt>
+		 * got destroyed.
+		 * 
+		 * @return void
+		 */
 		function destroy():void;
 	}
 }

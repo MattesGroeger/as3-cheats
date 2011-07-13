@@ -118,6 +118,18 @@ package de.mattesgroeger.cheats.controller
 		}
 
 		[Test]
+		public function should_ignore_first_double_letter():void
+		{
+			dispatchKey(99);
+			dispatchKey(99);
+			dispatchKey(1);
+			dispatchKey(2);
+			
+			verify(times(1)).that(cheatData1.toggle());
+			verify(never()).that(cheatData2.toggle());
+		}
+
+		[Test]
 		public function should_toggle_both_cheats():void
 		{
 			dispatchKey(1);

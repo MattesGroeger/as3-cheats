@@ -27,8 +27,8 @@ package de.mattesgroeger.cheats
 	import de.mattesgroeger.cheats.model.CheatCodeBuilder;
 	import de.mattesgroeger.cheats.model.ICheat;
 	import de.mattesgroeger.cheats.model.ICheatCode;
-	import de.mattesgroeger.cheats.view.DefaultCheatView;
-	import de.mattesgroeger.cheats.view.ICheatView;
+	import de.mattesgroeger.cheats.view.ICheatOutput;
+	import de.mattesgroeger.cheats.view.NoOutput;
 
 	import org.osflash.signals.ISignal;
 	import org.osflash.signals.Signal;
@@ -56,7 +56,7 @@ package de.mattesgroeger.cheats
 		private var _cheats:Vector.<Cheat>;
 		private var _cheatObserver:CheatObserver;
 		private var _sharedObject:SharedObject;
-		private var _cheatView:ICheatView;
+		private var _cheatOutput:ICheatOutput;
 		private var _toggledSignal:Signal = new Signal(ICheat);
 		
 		/**
@@ -106,20 +106,22 @@ package de.mattesgroeger.cheats
 			_cheats = new Vector.<Cheat>();
 			_cheatObserver = new CheatObserver(stage, this);
 			_sharedObject = SharedObject.getLocal(id);
-			_cheatView = new DefaultCheatView(stage);
+			_cheatOutput = new NoOutput();
 		}
 		
 		/**
 		 * @inheritDoc
 		 */
-		public function get cheatView():ICheatView
+		public function get output():ICheatOutput
 		{
-			return _cheatView;
+			return _cheatOutput;
 		}
 
-		public function set cheatView(cheatView:ICheatView):void
+		public function set output(cheatView:ICheatOutput):void
 		{
-			_cheatView = cheatView;
+			_cheatOutput.destroy();
+			
+			_cheatOutput = cheatView;
 		}
 		
 		/**
@@ -225,7 +227,7 @@ package de.mattesgroeger.cheats
 
 		private function handleToggledSignal(cheat:ICheat):void
 		{
-			_cheatView.cheatToggled(cheat);
+			_cheatOutput.cheatToggled(cheat);
 			_toggledSignal.dispatch(cheat);
 		}
 
@@ -237,11 +239,11 @@ package de.mattesgroeger.cheats
 			for each (var cheat:Cheat in _cheats)
 				cheat.toggledSignal.remove(handleToggledSignal);
 			
-			_cheatView.destroy();
+			_cheatOutput.destroy();
 			_cheatObserver.destroy();
 			_cheats = null;
 			_masterCheat = null;
-			_cheatView = null;
+			_cheatOutput = null;
 		}
 	}
 }

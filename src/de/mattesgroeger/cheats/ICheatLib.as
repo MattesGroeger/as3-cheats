@@ -23,7 +23,7 @@ package de.mattesgroeger.cheats
 {
 	import de.mattesgroeger.cheats.model.Cheat;
 	import de.mattesgroeger.cheats.model.ICheat;
-	import de.mattesgroeger.cheats.view.ICheatView;
+	import de.mattesgroeger.cheats.view.ICheatOutput;
 
 	import org.osflash.signals.ISignal;
 	
@@ -36,17 +36,17 @@ package de.mattesgroeger.cheats
 	public interface ICheatLib
 	{
 		/**
-		 * Allows to assign a custom view for visualizing cheat state
-		 * changes.
+		 * Allows to assign an output for visualizing cheat state changes.
 		 * 
-		 * <p>If you don't assign a view the <tt>CheatLib</tt> internally
-		 * creates a default view which gets added to the stage.</p>
+		 * <p>If you don't assign an output, the <tt>CheatLib</tt> internally
+		 * creates an instance of <tt>NoOutput</tt> which doesn't do anything.</p>
 		 * 
-		 * @see de.mattesgroeger.cheats.view.DefaultCheatView
+		 * @see de.mattesgroeger.cheats.view.NotificationOutput
+		 * @see de.mattesgroeger.cheats.view.TraceOutput
 		 */
-		function get cheatView():ICheatView;
+		function get output():ICheatOutput;
 
-		function set cheatView(cheatView:ICheatView):void;
+		function set output(cheatOutput:ICheatOutput):void;
 		
 		/**
 		 * The Signal gets dispatched whenever a cheat has been 

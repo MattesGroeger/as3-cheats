@@ -21,16 +21,15 @@
  */
 package de.mattesgroeger.cheats.view
 {
-	import flash.filters.DropShadowFilter;
 	import de.mattesgroeger.cheats.cheat_internal;
 	import de.mattesgroeger.cheats.model.Cheat;
 	import de.mattesgroeger.cheats.model.ICheat;
 
 	import flash.display.Bitmap;
+	import flash.display.DisplayObjectContainer;
 	import flash.display.Shape;
 	import flash.display.Sprite;
-	import flash.display.Stage;
-	import flash.events.IEventDispatcher;
+	import flash.filters.DropShadowFilter;
 	import flash.text.StyleSheet;
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
@@ -38,33 +37,53 @@ package de.mattesgroeger.cheats.view
 	import flash.utils.setTimeout;
 
 	use namespace cheat_internal;
-
-	public class DefaultCheatView implements ICheatView
+	
+	/**
+	 * This class provides a visual output for cheat state changes.
+	 * 
+	 * <p>Whenever a cheat state is toggled a small notification will be 
+	 * displayed in the top left corner of the used container. If you set
+	 * a label for your cheat it will be used. Otherwise the id/code
+	 * will be displayed instead.</p>
+	 * 
+	 * <p>If a master cheat had been toggled a small lock icon will be 
+	 * displayed beside the label.<p>
+	 * 
+	 * <p>You can pass any <tt>DisplayObjectContainer</tt> to the class 
+	 * constructor. The class will create its own children and will never
+	 * touch other children of the passed container. So you could also 
+	 * pass the stage reference of your application.</p>
+	 * @example <listing version="3.0">
+	 * var cheatLib:ICheatLib = CheatLib.get("demo")
+	 * cheatLib.output = new NotificationOutput(stage);</listing>
+	 */
+	public class NotificationOutput implements ICheatOutput
 	{
-		[Embed(source="../../../../../assets/lock.png")]
-		private var lockClass:Class;
-		private var lockView:Bitmap = new lockClass();
-
 		private static const SHOW_TIME_MS:uint = 3000;
 		private static const TEXT_COLOR_1:String = "#575854";
 		private static const TEXT_COLOR_2:String = "#000000";
 		private static const BACKGROUND_COLOR_ON:uint = 0xcfff75;
 		private static const BACKGROUND_COLOR_OFF:uint = 0xace8ed;
 
-		private var stage:Stage;
+		[Embed(source="../../../../../assets/lock.png")]
+		private var LockClass:Class;
+		private var lockView:Bitmap = new LockClass();
+
+		private var container:DisplayObjectContainer;
 		private var cheatView:Sprite;
 		private var timeout:uint;
 
-		public function DefaultCheatView(stage:IEventDispatcher)
+		public function NotificationOutput(container:DisplayObjectContainer)
 		{
-			if (stage is Stage)
-				this.stage = Stage(stage);
+			this.container = container;
 		}
 
+		/**
+		 * @inheritDoc
+		 */
 		public function cheatToggled(cheat:ICheat):void
 		{
-			if (stage != null)
-				renderCheat(cheat);
+			renderCheat(cheat);
 		}
 
 		private function renderCheat(cheat:ICheat):void
@@ -131,7 +150,7 @@ package de.mattesgroeger.cheats.view
 				return;
 
 			clearTimeout(timeout);
-			stage.removeChild(cheatView);
+			container.removeChild(cheatView);
 			cheatView = null;
 		}
 
@@ -153,11 +172,14 @@ package de.mattesgroeger.cheats.view
 				filters = [new DropShadowFilter(1, 45, 0, 0.5, 1, 1)];
 			}
 			
-			stage.addChild(cheatView);
+			container.addChild(cheatView);
 
 			timeout = setTimeout(clearView, SHOW_TIME_MS);
 		}
 
+		/**
+		 * @inheritDoc
+		 */
 		public function destroy():void
 		{
 			clearView();
