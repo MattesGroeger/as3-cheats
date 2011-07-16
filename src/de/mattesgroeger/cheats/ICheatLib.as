@@ -98,7 +98,32 @@ package de.mattesgroeger.cheats
 		 * @return ICheat
 		 */
 		function createMasterCheat(code:String, persist:Boolean = false, label:String = null):ICheat;
-
+		
+		/**
+		 * Allows to set a master cheat that has complex key <tt>codes</tt>. 
+		 * 
+		 * <p>This method provides the same functionalities as 
+		 * <tt>createMasterCheat()</tt> but allows to pass in an existing cheat 
+		 * instance. This way you have more flexibility in configuring the cheat
+		 * itself.</p>
+		 * 
+		 * @example <listing version="3.0">
+		 * CheatLib.get("demo")
+		 *     .addMasterCheat(CheatBuilder.create("master", 
+		 *                 CheatCodeBuilder.create()
+		 *                     .appendString("master")
+		 *                     .appendKeyCode(Keyboard.ENTER)
+		 *                     .build())
+		 *                 .build());</listing>
+		 * @see de.mattesgroeger.cheats.ICheatLib#createMasterCheat()
+		 * @see de.mattesgroeger.cheats.model.CheatBuilder
+		 * @see de.mattesgroeger.cheats.model.CheatCodeBuilder
+		 * @param cheat The cheat that should be used
+		 * @param persist If the state should be stored in the local shared object
+		 * @return void
+		 */
+		function addMasterCheat(cheat:Cheat, persist:Boolean = false):void;
+		
 		/**
 		 * A cheat can be activated/deactivated (toggled) by key <tt>codes</tt>.
 		 * 

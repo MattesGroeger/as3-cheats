@@ -162,22 +162,26 @@ package de.mattesgroeger.cheats
 			if (_masterCheat != null)
 				throw new IllegalOperationError("You can only set one master cheat! Already set " + _masterCheat.id + "!");
 			
-			_masterCheat = registerCheat(code, persist, label);
+			_masterCheat = buildCheat(code, label);
 			
+			registerCheat(_masterCheat, persist);
 			updateMasterCheatInExistingOnes();
 			
 			return _masterCheat;
 		}
-
-		private function updateMasterCheatInExistingOnes():void
+		
+		/**
+		 * @inheritDoc
+		 */
+		public function addMasterCheat(cheat:Cheat, persist:Boolean = false):void
 		{
-			for each (var cheat:Cheat in _cheats)
-			{
-				if (cheat == _masterCheat)
-					continue;
-				
-				cheat.parent = _masterCheat;
-			}
+			if (_masterCheat != null)
+				throw new IllegalOperationError("You can only set one master cheat! Already set " + _masterCheat.id + "!");
+			
+			_masterCheat = cheat;
+			
+			registerCheat(_masterCheat, persist);
+			updateMasterCheatInExistingOnes();
 		}
 
 		/**
@@ -185,7 +189,10 @@ package de.mattesgroeger.cheats
 		 */
 		public function createCheat(code:String, persist:Boolean = false, label:String = null):ICheat
 		{
-			return registerCheat(code, persist, label);
+			var cheat:Cheat = buildCheat(code, label);
+			registerCheat(cheat, persist);
+			
+			return cheat;
 		}
 		
 		/**
@@ -204,7 +211,7 @@ package de.mattesgroeger.cheats
 			_cheats.push(cheat);
 		}
 
-		private function registerCheat(code:String, persist:Boolean, label:String):Cheat
+		private function buildCheat(code:String, label:String):Cheat
 		{
 			var cheatCode:ICheatCode = CheatCodeBuilder.create()
 											.appendString(code)
@@ -215,14 +222,28 @@ package de.mattesgroeger.cheats
 			if (label != null)
 				cheat.label = label;
 			
+			return cheat;
+		}
+
+		private function registerCheat(cheat:Cheat, persist:Boolean):void
+		{
 			if (persist)
 				cheat.sharedObject = _sharedObject;
 			
 			cheat.toggledSignal.add(handleToggledSignal);
 			
 			_cheats.push(cheat);
-			
-			return cheat;
+		}
+
+		private function updateMasterCheatInExistingOnes():void
+		{
+			for each (var cheat:Cheat in _cheats)
+			{
+				if (cheat == _masterCheat)
+					continue;
+				
+				cheat.parent = _masterCheat;
+			}
 		}
 
 		private function handleToggledSignal(cheat:ICheat):void

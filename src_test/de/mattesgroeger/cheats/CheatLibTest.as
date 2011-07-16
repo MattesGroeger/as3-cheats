@@ -21,6 +21,8 @@
  */
 package de.mattesgroeger.cheats
 {
+	import de.mattesgroeger.cheats.model.ICheatCode;
+	import de.mattesgroeger.cheats.model.ICheat;
 	import org.mockito.integrations.times;
 	import org.mockito.integrations.verify;
 	import de.mattesgroeger.cheats.model.Cheat;
@@ -53,6 +55,9 @@ package de.mattesgroeger.cheats
 		
 		[Mock]
 		public var output2:ICheatOutput;
+		
+		[Mock]
+		public var cheatCode:ICheatCode;
 		
 		[Test]
 		public function should_create_and_return():void
@@ -108,6 +113,42 @@ package de.mattesgroeger.cheats
 			assertThat(cheat.code.keyCodeAt(2), equalTo(67));
 			assertThat(cheat.activated, equalTo(false));
 			assertThat(cheat.label, nullValue());
+		}
+
+		[Test]
+		public function should_add_cheat():void
+		{
+			var cheatLib:CheatLib = new CheatLib(stage, "test");
+			var cheat:Cheat = new Cheat("test", cheatCode);
+			
+			cheatLib.addCheat(cheat);
+			
+			assertThat(cheatLib.getCheat("test"), equalTo(cheat));
+		}
+		
+		[Test]
+		public function should_add_master_cheat():void
+		{
+			var cheatLib:CheatLib = new CheatLib(stage, "test");
+			
+			var cheatA:Cheat = Cheat(cheatLib.createCheat("a"));
+			var cheatB:Cheat = CheatBuilder.create("b", CheatCodeBuilder.create().appendString("b").build()).build();
+			cheatLib.addCheat(cheatB);
+			var cheatC:Cheat = new Cheat("test", cheatCode);
+			cheatLib.addMasterCheat(cheatC);
+			var cheatD:Cheat = Cheat(cheatLib.createCheat("d"));
+			var cheatE:Cheat = CheatBuilder.create("e", CheatCodeBuilder.create().appendString("e").build()).build();
+			cheatLib.addCheat(cheatE);
+
+			assertThat(cheatA.cheat_internal::parent, equalTo(cheatC));
+			assertThat(cheatB.cheat_internal::parent, equalTo(cheatC));
+			assertThat(cheatD.cheat_internal::parent, equalTo(cheatC));
+			assertThat(cheatE.cheat_internal::parent, equalTo(cheatC));
+			assertThat(cheatC.cheat_internal::children.length, equalTo(4));
+			assertThat(cheatC.cheat_internal::children[0], equalTo(cheatA));
+			assertThat(cheatC.cheat_internal::children[1], equalTo(cheatB));
+			assertThat(cheatC.cheat_internal::children[2], equalTo(cheatD));
+			assertThat(cheatC.cheat_internal::children[3], equalTo(cheatE));
 		}
 
 		[Test]
