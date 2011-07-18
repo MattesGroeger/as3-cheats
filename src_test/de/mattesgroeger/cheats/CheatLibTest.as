@@ -22,7 +22,6 @@
 package de.mattesgroeger.cheats
 {
 	import de.mattesgroeger.cheats.model.ICheatCode;
-	import de.mattesgroeger.cheats.model.ICheat;
 	import org.mockito.integrations.times;
 	import org.mockito.integrations.verify;
 	import de.mattesgroeger.cheats.model.Cheat;
@@ -124,6 +123,24 @@ package de.mattesgroeger.cheats
 			cheatLib.addCheat(cheat);
 			
 			assertThat(cheatLib.getCheat("test"), equalTo(cheat));
+		}
+		
+		[Test]
+		public function should_add_cheat_without_setting_master():void
+		{
+			var cheatLib:CheatLib = new CheatLib(stage, "test");
+			
+			var cheatA:Cheat = CheatBuilder.create("a", CheatCodeBuilder.create().appendString("a").build()).build();
+			cheatLib.addCheat(cheatA, false, false);
+			var cheatB:Cheat = new Cheat("test", cheatCode);
+			cheatLib.addMasterCheat(cheatB);
+			var cheatC:Cheat = CheatBuilder.create("c", CheatCodeBuilder.create().appendString("c").build()).build();
+			cheatLib.addCheat(cheatC, false, false);
+
+			assertThat(cheatA.cheat_internal::parent, equalTo(cheatB));
+			assertThat(cheatC.cheat_internal::parent, nullValue());
+			assertThat(cheatB.cheat_internal::children.length, equalTo(1));
+			assertThat(cheatB.cheat_internal::children[0], equalTo(cheatA));
 		}
 		
 		[Test]

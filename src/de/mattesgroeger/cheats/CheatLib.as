@@ -198,9 +198,9 @@ package de.mattesgroeger.cheats
 		/**
 		 * @inheritDoc
 		 */
-		public function addCheat(cheat:Cheat, persist:Boolean = false):void
+		public function addCheat(cheat:Cheat, persist:Boolean = false, applyMaster:Boolean = true):void
 		{
-			if (_masterCheat)
+			if (_masterCheat && applyMaster)
 				cheat.parent = _masterCheat;
 			
 			if (persist)

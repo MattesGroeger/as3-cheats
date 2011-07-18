@@ -177,9 +177,10 @@ package de.mattesgroeger.cheats
 		 * @see de.mattesgroeger.cheats.model.CheatCodeBuilder
 		 * @param cheat The cheat that should be used
 		 * @param persist If the state should be stored in the local shared object
+		 * @param applyMaster In case there is already a master cheat defined, if it should be used for this cheat (Note: If you apply the master cheat afterwards, this property has no effect)
 		 * @return void
 		 */
-		function addCheat(cheat:Cheat, persist:Boolean = false):void;
+		function addCheat(cheat:Cheat, persist:Boolean = false, applyMaster:Boolean = true):void;
 		
 		/**
 		 * Returns a previously added or created cheat by <tt>id</tt>.
