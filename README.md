@@ -111,7 +111,7 @@ Change log
 
 **0.0.3-SNAPSHOT**
 
-* **[Added]** Added `CheatLib.has(id)` method to determent if a lib exists for a certain key
+* **[Added]** Added `CheatLib.has(id)` method to determine if a lib exists for a certain key
 * **[Added]** Added `applyMaster` parameter to `addCheat()` in case you want to ignore the master cheat
 * **[Added]** Added method `addMasterCheat` to CheatLib
 
