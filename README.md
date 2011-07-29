@@ -22,6 +22,10 @@ See the examples below for more details.
 This library is compiled against *as3-signals-v0.7*. The SWC is included in the download file.
 More information regarding as3-signals can be [found here](https://github.com/robertpenner/as3-signals).
 
+**Known issues**
+
+The CheatLib only supports the english keyboard layout. There is no support for other keyboard layouts planned so far.
+
 Usage
 -----
 
