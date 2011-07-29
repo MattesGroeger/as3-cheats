@@ -47,7 +47,7 @@ package de.mattesgroeger.cheats.view
 	 * will be displayed instead.</p>
 	 * 
 	 * <p>If a master cheat had been toggled a small lock icon will be 
-	 * displayed beside the label.<p>
+	 * displayed beside the label.</p>
 	 * 
 	 * <p>You can pass any <tt>DisplayObjectContainer</tt> to the class 
 	 * constructor. The class will create its own children and will never
