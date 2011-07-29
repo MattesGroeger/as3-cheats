@@ -105,6 +105,10 @@ For more insight please check out the [example implementation](https://github.co
 Change log
 ----------
 
+**0.0.3-SNAPSHOT**
+
+* **[Added]** Added `CheatLib.has(id)` method to determent if a lib exists for a certain key
+
 **0.0.2** (2011/07/13)
 
 * **[Added]** Added output functionality for `CheatLib` (shows state changes). You can use one of the default implementations (NotificationOutput, TraceOutput) or assign your own ones.

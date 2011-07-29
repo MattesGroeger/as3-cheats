@@ -91,10 +91,23 @@ package de.mattesgroeger.cheats
 		 */
 		public static function get(id:String):ICheatLib
 		{
-			if (cheatLibs[id] == null)
+			if (!has(id))
 				throw new IllegalOperationError("No CheatLib registered for id " + id + ". Make sure to create() one before!");
 			
 			return cheatLibs[id];
+		}
+		
+		/**
+		 * Returns whether a <tt>CheatLib</tt> exists for the specified id.
+		 * 
+		 * @example <listing version="3.0">
+		 * var exists:Boolean = CheatLib.has("demo");</listing>
+		 * @param id Id of the <tt>CheatLib</tt> instance
+		 * @return Boolean
+		 */
+		public static function has(id:String):Boolean
+		{
+			return (cheatLibs[id] != null);
 		}
 
 		/**
