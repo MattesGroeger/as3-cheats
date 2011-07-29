@@ -109,7 +109,7 @@ For more insight please check out the [example implementation](https://github.co
 Change log
 ----------
 
-**0.0.3-SNAPSHOT**
+**0.0.3** (2011/07/29)
 
 * **[Added]** Added `CheatLib.has(id)` method to determine if a lib exists for a certain key
 * **[Added]** Added `applyMaster` parameter to `addCheat()` in case you want to ignore the master cheat
