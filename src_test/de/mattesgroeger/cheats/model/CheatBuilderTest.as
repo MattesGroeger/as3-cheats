@@ -35,13 +35,13 @@ package de.mattesgroeger.cheats.model
 		public var cheatCode:ICheatCode;
 
 		[Mock(argsList="masterCheatArgs")]
-		public var masterCheat:Cheat;
+		public var masterCheat:ToggleCheat;
 		public var masterCheatArgs:Array = [null, null];
 		
 		[Test]
 		public function should_build_default_cheat():void
 		{
-			var cheat:Cheat = CheatBuilder.create("test", cheatCode)
+			var cheat:ToggleCheat = CheatBuilder.create("test", cheatCode)
 								.setLabel("Label")
 								.setMasterCheat(masterCheat)
 								.build();

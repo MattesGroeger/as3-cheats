@@ -27,7 +27,7 @@ package de.mattesgroeger.cheats.model
 
 	public class CheatBuilder
 	{
-		private var cheat:Cheat;
+		private var cheat:ToggleCheat;
 
 		public static function create(id:String, code:ICheatCode):CheatBuilder
 		{
@@ -36,7 +36,7 @@ package de.mattesgroeger.cheats.model
 
 		public function CheatBuilder(id:String, code:ICheatCode)
 		{
-			cheat = new Cheat(id, code);
+			cheat = new ToggleCheat(id, code);
 		}
 
 		public function setLabel(label:String):CheatBuilder
@@ -46,14 +46,14 @@ package de.mattesgroeger.cheats.model
 			return this;
 		}
 
-		public function setMasterCheat(master:Cheat):CheatBuilder
+		public function setMasterCheat(master:ToggleCheat):CheatBuilder
 		{
 			cheat.parent = master;
 
 			return this;
 		}
 
-		public function build():Cheat
+		public function build():ToggleCheat
 		{
 			return cheat;
 		}

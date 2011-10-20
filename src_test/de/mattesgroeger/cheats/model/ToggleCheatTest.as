@@ -35,7 +35,7 @@ package de.mattesgroeger.cheats.model
 	
 	use namespace cheat_internal;
 	
-	public class CheatTest
+	public class ToggleCheatTest
 	{
 		[Rule]
 		public var mockitoRule:IMethodRule = new MockitoRule();
@@ -43,11 +43,11 @@ package de.mattesgroeger.cheats.model
 		[Mock]
 		public var cheatCode:CheatCode;
 		
-		private var root:Cheat;
-		private var sub1a:Cheat;
-		private var sub1b:Cheat;
-		private var sub2c:Cheat;
-		private var sub2d:Cheat;
+		private var root:ToggleCheat;
+		private var sub1a:ToggleCheat;
+		private var sub1b:ToggleCheat;
+		private var sub2c:ToggleCheat;
+		private var sub2d:ToggleCheat;
 		
 		/**
 		 *   root		 r   
@@ -61,11 +61,11 @@ package de.mattesgroeger.cheats.model
 		[Before]
 		public function before():void
 		{
-			root = new Cheat("root", cheatCode);
-			sub1a = new Cheat("sub1a", cheatCode, root);
-			sub1b = new Cheat("sub1b", cheatCode, root);
-			sub2c = new Cheat("sub2c", cheatCode, sub1b);
-			sub2d = new Cheat("sub2d", cheatCode, sub1b);
+			root = new ToggleCheat("root", cheatCode);
+			sub1a = new ToggleCheat("sub1a", cheatCode, root);
+			sub1b = new ToggleCheat("sub1b", cheatCode, root);
+			sub2c = new ToggleCheat("sub2c", cheatCode, sub1b);
+			sub2d = new ToggleCheat("sub2d", cheatCode, sub1b);
 		}
 		
 		[Test]
@@ -74,7 +74,7 @@ package de.mattesgroeger.cheats.model
 			assertThat(root.id, equalTo("root"));
 			assertThat(root.code, equalTo(cheatCode));
 			assertThat(root.activated, equalTo(false));
-			assertThat(root.toggledSignal, notNullValue());
+			assertThat(root.toggleSignal, notNullValue());
 		}
 
 		[Test]
@@ -91,7 +91,7 @@ package de.mattesgroeger.cheats.model
 		[Test(async)]
 		public function should_dispatch_toggle():void
 		{
-			handleSignal(this, root.toggledSignal, handleToggled, 10, {data:root}); 
+			handleSignal(this, root.toggleSignal, handleToggled, 10, {data:root}); 
 			
 			root.activated = true;
 		}
@@ -99,20 +99,20 @@ package de.mattesgroeger.cheats.model
 		[Test(async)]
 		public function should_toggle():void
 		{
-			handleSignal(this, root.toggledSignal, handleToggled, 10, {data:root}); 
+			handleSignal(this, root.toggleSignal, handleToggled, 10, {data:root}); 
 			
-			root.toggle();
+			root.trigger();
 		}
 
 		private function handleToggled(event:SignalAsyncEvent, data:Object):void
 		{
-			assertThat(Cheat(data["data"]).activated, equalTo(true));
+			assertThat(ToggleCheat(data["data"]).activated, equalTo(true));
 		}
 
 		[Test(async)]
 		public function should_not_toggle():void
 		{
-			failOnSignal(this, root.toggledSignal); 
+			failOnSignal(this, root.toggleSignal); 
 			
 			root.activated = false;
 		}
@@ -120,11 +120,11 @@ package de.mattesgroeger.cheats.model
 		[Test(async)]
 		public function should_not_toggle_because_of_deactivated_parent():void
 		{
-			failOnSignal(this, root.toggledSignal); 
-			failOnSignal(this, sub1a.toggledSignal); 
-			failOnSignal(this, sub1b.toggledSignal); 
-			failOnSignal(this, sub2c.toggledSignal); 
-			failOnSignal(this, sub2d.toggledSignal); 
+			failOnSignal(this, root.toggleSignal); 
+			failOnSignal(this, sub1a.toggleSignal); 
+			failOnSignal(this, sub1b.toggleSignal); 
+			failOnSignal(this, sub2c.toggleSignal); 
+			failOnSignal(this, sub2d.toggleSignal); 
 			
 			sub1a.activated = true;
 			sub1b.activated = true;
@@ -135,11 +135,11 @@ package de.mattesgroeger.cheats.model
 		[Test(async)]
 		public function should_toggle_because_of_activated_parent():void
 		{
-			proceedOnSignal(this, root.toggledSignal); 
-			proceedOnSignal(this, sub1a.toggledSignal); 
-			failOnSignal(this, sub1b.toggledSignal); 
-			failOnSignal(this, sub2c.toggledSignal); 
-			failOnSignal(this, sub2d.toggledSignal); 
+			proceedOnSignal(this, root.toggleSignal); 
+			proceedOnSignal(this, sub1a.toggleSignal); 
+			failOnSignal(this, sub1b.toggleSignal); 
+			failOnSignal(this, sub2c.toggleSignal); 
+			failOnSignal(this, sub2d.toggleSignal); 
 			
 			root.activated = true;
 			sub1a.activated = true;
@@ -150,11 +150,11 @@ package de.mattesgroeger.cheats.model
 		[Test(async)]
 		public function should_activate_all():void
 		{
-			proceedOnSignal(this, root.toggledSignal); 
-			proceedOnSignal(this, sub1a.toggledSignal); 
-			proceedOnSignal(this, sub1b.toggledSignal); 
-			proceedOnSignal(this, sub2c.toggledSignal); 
-			proceedOnSignal(this, sub2d.toggledSignal); 
+			proceedOnSignal(this, root.toggleSignal); 
+			proceedOnSignal(this, sub1a.toggleSignal); 
+			proceedOnSignal(this, sub1b.toggleSignal); 
+			proceedOnSignal(this, sub2c.toggleSignal); 
+			proceedOnSignal(this, sub2d.toggleSignal); 
 			
 			root.activated = true;
 			sub1a.activated = true;

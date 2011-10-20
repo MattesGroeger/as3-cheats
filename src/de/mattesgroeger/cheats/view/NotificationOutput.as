@@ -21,9 +21,10 @@
  */
 package de.mattesgroeger.cheats.view
 {
-	import de.mattesgroeger.cheats.cheat_internal;
-	import de.mattesgroeger.cheats.model.Cheat;
 	import de.mattesgroeger.cheats.model.ICheat;
+	import de.mattesgroeger.cheats.cheat_internal;
+	import de.mattesgroeger.cheats.model.ToggleCheat;
+	import de.mattesgroeger.cheats.model.IToggleCheat;
 
 	import flash.display.Bitmap;
 	import flash.display.DisplayObjectContainer;
@@ -64,6 +65,7 @@ package de.mattesgroeger.cheats.view
 		private static const TEXT_COLOR_2:String = "#000000";
 		private static const BACKGROUND_COLOR_ON:uint = 0xcfff75;
 		private static const BACKGROUND_COLOR_OFF:uint = 0xace8ed;
+		private static const BACKGROUND_COLOR_TRIGGERD:uint = 0xffc0ef;
 
 		[Embed(source="../../../../../assets/lock.png")]
 		private var LockClass:Class;
@@ -81,20 +83,21 @@ package de.mattesgroeger.cheats.view
 		/**
 		 * @inheritDoc
 		 */
-		public function cheatToggled(cheat:ICheat):void
+		public function cheatTriggered(cheat:ICheat):void
 		{
 			renderCheat(cheat);
 		}
 
 		private function renderCheat(cheat:ICheat):void
 		{
-			var isMasterCheat:Boolean = cheat is Cheat && Cheat(cheat).children && Cheat(cheat).children.length > 0;
+			var isMasterCheat:Boolean = cheat is ToggleCheat && ToggleCheat(cheat).children && ToggleCheat(cheat).children.length > 0;
+			var isTogglable:Boolean = cheat is IToggleCheat;
 
 			var labelText:String = (cheat.label != null) ? cheat.label : cheat.id;
-			var label:TextField = createLabel(labelText, cheat.activated);
+			var label:TextField = createLabel(labelText, isTogglable, (isTogglable) ? IToggleCheat(cheat).activated : false);
 			
 			var backgroundWidth:Number = label.width + (isMasterCheat ? 10 : 0);
-			var backgroundColor:uint = (cheat.activated) ? BACKGROUND_COLOR_ON : BACKGROUND_COLOR_OFF;
+			var backgroundColor:uint = (isTogglable) ? (IToggleCheat(cheat).activated) ? BACKGROUND_COLOR_ON : BACKGROUND_COLOR_OFF : BACKGROUND_COLOR_TRIGGERD;
 			var background:Shape = createBackground(backgroundColor, backgroundWidth);
 			
 			var lockView:Bitmap = createLockView(isMasterCheat, label);
@@ -103,9 +106,10 @@ package de.mattesgroeger.cheats.view
 			setView(label, background, lockView);
 		}
 
-		private function createLabel(label:String, activated:Boolean):TextField
+		private function createLabel(label:String, togglable:Boolean, activated:Boolean):TextField
 		{
-			var stateText:String = (activated) ? "ON" : "OFF";
+			var stateText:String = (togglable) ? (activated) ? "ON" : "OFF" : "";
+			stateText = (stateText != "") ? " <span class='state'>" + stateText + "</span>" : "";
 			var styleSheet:StyleSheet = new StyleSheet();
 			styleSheet.setStyle("body", {fontFamily:"Arial", fontWeight:"bold", fontSize:10, color:TEXT_COLOR_2});
 			styleSheet.setStyle(".state", {fontWeight:"normal", color:TEXT_COLOR_1});
@@ -114,7 +118,7 @@ package de.mattesgroeger.cheats.view
 			text.x = 2;
 			text.autoSize = TextFieldAutoSize.LEFT;
 			text.styleSheet = styleSheet;
-			text.htmlText = "<body>" + label.toUpperCase() + " <span class='state'>" + stateText + "</span></body>";
+			text.htmlText = "<body>" + label.toUpperCase() + stateText  + "</body>";
 			
 			return text;
 		}

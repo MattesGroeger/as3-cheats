@@ -40,30 +40,21 @@ package de.mattesgroeger.cheats.model
 		
 		/**
 		 * The Signal gets dispatched whenever the cheat has been 
-		 * activated/deactivated (toggled). The registered listener 
-		 * function needs to have one parameter of type 
-		 * <tt>ICheat</tt>.
+		 * triggered. The registered listener function needs to have 
+		 * one parameter of type <tt>ICheat</tt>.
 		 * 
 		 * @example <listing version="3.0">
 		 * CheatLib.get("demo")
 		 *     .getCheat("test")
-		 *         .toggledSignal
+		 *         .triggerSignal
 		 *         .add(handleCheatToggle);
 		 * 
-		 * function handleCheatToggle(cheat:ICheat):void
+		 * function handleCheatTrigger(cheat:ICheat):void
 		 * {
 		 *     trace("Cheat " + cheat.activated);
 		 * }</listing>
 		 * @see de.mattesgroeger.cheats.model.ICheat
 		 */
-		function get toggledSignal():ISignal;
-		
-		/**
-		 * Returns whether the cheat is currently activated or not.
-		 * 
-		 * <p>Be aware that the state won't change in case of a master
-		 * cheat that is not activated.</p>
-		 */
-		function get activated():Boolean;
+		function get triggerSignal():ISignal;
 	}
 }

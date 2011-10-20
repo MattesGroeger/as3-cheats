@@ -21,7 +21,7 @@
  */
 package de.mattesgroeger.cheats.view
 {
-	import de.mattesgroeger.cheats.view.ICheatOutput;
+	import de.mattesgroeger.cheats.model.IToggleCheat;
 	import de.mattesgroeger.cheats.model.ICheat;
 
 	/**
@@ -37,11 +37,11 @@ package de.mattesgroeger.cheats.view
 	 */
 	public class TraceOutput implements ICheatOutput
 	{
-		public function cheatToggled(cheat:ICheat):void
+		public function cheatTriggered(cheat:ICheat):void
 		{
 			var label:String = cheat.label != null ? cheat.label : cheat.id;
 			
-			trace("Cheat " + label.toUpperCase() + " " + (cheat.activated ? "activated" : "deactivated"));
+			trace("Cheat " + label.toUpperCase() + " " + ((cheat is IToggleCheat) ? ((IToggleCheat(cheat).activated) ? "activated" : "deactivated") : "triggered"));
 		}
 
 		public function destroy():void

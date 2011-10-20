@@ -21,8 +21,9 @@
  */
 package de.mattesgroeger.cheats
 {
-	import de.mattesgroeger.cheats.model.Cheat;
 	import de.mattesgroeger.cheats.model.ICheat;
+	import de.mattesgroeger.cheats.model.IToggleCheat;
+	import de.mattesgroeger.cheats.model.ToggleCheat;
 	import de.mattesgroeger.cheats.view.ICheatOutput;
 
 	import org.osflash.signals.ISignal;
@@ -63,16 +64,16 @@ package de.mattesgroeger.cheats
 		 * 
 		 * @example <listing version="3.0">
 		 * CheatLib.get("demo")
-		 *     .toggledSignal
-		 *     .add(handleToggle);
+		 *     .triggerSignal
+		 *     .add(handleTrigger);
 		 * 
-		 * function handleToggle(cheat:ICheat):void
+		 * function handleTrigger(cheat:ICheat):void
 		 * {
 		 *     trace("Cheat '" + cheat.id + "' " + cheat.activated);
 		 * }</listing>
 		 * @see de.mattesgroeger.cheats.model.ICheat
 		 */
-		function get toggledSignal():ISignal;
+		function get triggerSignal():ISignal;
 		
 		/**
 		 * With a master cheat you block other cheats in the same 
@@ -97,7 +98,7 @@ package de.mattesgroeger.cheats
 		 * @param label Can be used for debug output
 		 * @return ICheat
 		 */
-		function createMasterCheat(code:String, persist:Boolean = false, label:String = null):ICheat;
+		function createMasterToggleCheat(code:String, persist:Boolean = false, label:String = null):IToggleCheat;
 		
 		/**
 		 * Allows to set a master cheat that has complex key <tt>codes</tt>. 
@@ -122,10 +123,28 @@ package de.mattesgroeger.cheats
 		 * @param persist If the state should be stored in the local shared object
 		 * @return void
 		 */
-		function addMasterCheat(cheat:Cheat, persist:Boolean = false):void;
+		function addMasterCheat(cheat:ToggleCheat, persist:Boolean = false):void;
 		
 		/**
-		 * A cheat can be activated/deactivated (toggled) by key <tt>codes</tt>.
+		 * A cheat can be triggered by key <tt>codes</tt>.
+		 * 
+		 * <p>The <tt>code</tt> needs to be a <tt>String</tt>. Internally it uses 
+		 * this <tt>code</tt> also as <tt>id</tt> for the cheat. For more complex 
+		 * cheat <tt>codes</tt> read the documentation of <tt>addCheat()</tt></p>
+		 * 
+		 * @example <listing version="3.0">
+		 * CheatLib.get("demo")
+		 *     .createCheat("test", "Test");</listing>
+		 * @see de.mattesgroeger.cheats.ICheatLib#createMasterCheat()
+		 * @see de.mattesgroeger.cheats.ICheatLib#addCheat()
+		 * @param code The string that has to be entered for triggering the cheat
+		 * @param label Can be used for debug output
+		 * @return ICheat
+		 */
+		function createCheat(code:String, label:String = null):ICheat;
+		
+		/**
+		 * A toggle cheat can be activated/deactivated (toggled) by key <tt>codes</tt>.
 		 * 
 		 * <p>The <tt>code</tt> needs to be a <tt>String</tt>. Internally it uses 
 		 * this <tt>code</tt> also as <tt>id</tt> for the cheat. For more complex 
@@ -146,7 +165,7 @@ package de.mattesgroeger.cheats
 		 * @param label Can be used for debug output
 		 * @return ICheat
 		 */
-		function createCheat(code:String, persist:Boolean = false, label:String = null):ICheat;
+		function createToggleCheat(code:String, persist:Boolean = false, label:String = null):IToggleCheat;
 
 		/**
 		 * Allows to add externally created <tt>Cheat</tt> instances.
@@ -180,14 +199,13 @@ package de.mattesgroeger.cheats
 		 * @param applyMaster In case there is already a master cheat defined, if it should be used for this cheat (Note: If you apply the master cheat afterwards, this property has no effect)
 		 * @return void
 		 */
-		function addCheat(cheat:Cheat, persist:Boolean = false, applyMaster:Boolean = true):void;
+		function addCheat(cheat:ToggleCheat, persist:Boolean = false, applyMaster:Boolean = true):void;
 		
 		/**
 		 * Returns a previously added or created cheat by <tt>id</tt>.
 		 * 
 		 * <p>In case of an cheat that has been created via the <tt>createCheat()</tt>
-		 * or <tt>createMasterCheat()</tt> methods the <tt>code</tt> is used as 
-		 * <tt>id</tt>.</p>
+		 * method the <tt>code</tt> is used as <tt>id</tt>.</p>
 		 * 
 		 * @example <listing version="3.0">
 		 * CheatLib.get("demo")
@@ -196,6 +214,22 @@ package de.mattesgroeger.cheats
 		 * @return ICheat
 		 */
 		function getCheat(id:String):ICheat;
+		
+		
+		/**
+		 * Returns a previously added or created toggle cheat by <tt>id</tt>.
+		 * 
+		 * <p>In case of an cheat that has been created via the <tt>createToggleCheat()</tt>
+		 * or <tt>createMasterCheat()</tt> methods the <tt>code</tt> is used as 
+		 * <tt>id</tt>.</p>
+		 * 
+		 * @example <listing version="3.0">
+		 * CheatLib.get("demo")
+		 *     .getToggleCheat("test");</listing>
+		 * @param id Id that was set before for the cheat
+		 * @return ICheat
+		 */
+		function getToggleCheat(id:String):IToggleCheat;
 		
 		/**
 		 * Destroys the <tt>ICheatLib</tt> instance. Removes all internal references.

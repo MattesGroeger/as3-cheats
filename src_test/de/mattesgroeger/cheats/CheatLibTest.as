@@ -24,7 +24,7 @@ package de.mattesgroeger.cheats
 	import de.mattesgroeger.cheats.model.ICheatCode;
 	import org.mockito.integrations.times;
 	import org.mockito.integrations.verify;
-	import de.mattesgroeger.cheats.model.Cheat;
+	import de.mattesgroeger.cheats.model.ToggleCheat;
 	import de.mattesgroeger.cheats.model.CheatBuilder;
 	import de.mattesgroeger.cheats.model.CheatCodeBuilder;
 	import de.mattesgroeger.cheats.view.ICheatOutput;
@@ -104,7 +104,7 @@ package de.mattesgroeger.cheats
 		{
 			var cheatLib:CheatLib = new CheatLib(stage, "test");
 
-			var cheat:Cheat = Cheat(cheatLib.createCheat("abc"));
+			var cheat:ToggleCheat = ToggleCheat(cheatLib.createToggleCheat("abc"));
 			
 			assertThat(cheat.id, equalTo("abc"));
 			assertThat(cheat.code.keyCodeAt(0), equalTo(65));
@@ -118,7 +118,7 @@ package de.mattesgroeger.cheats
 		public function should_add_cheat():void
 		{
 			var cheatLib:CheatLib = new CheatLib(stage, "test");
-			var cheat:Cheat = new Cheat("test", cheatCode);
+			var cheat:ToggleCheat = new ToggleCheat("test", cheatCode);
 			
 			cheatLib.addCheat(cheat);
 			
@@ -130,11 +130,11 @@ package de.mattesgroeger.cheats
 		{
 			var cheatLib:CheatLib = new CheatLib(stage, "test");
 			
-			var cheatA:Cheat = CheatBuilder.create("a", CheatCodeBuilder.create().appendString("a").build()).build();
+			var cheatA:ToggleCheat = CheatBuilder.create("a", CheatCodeBuilder.create().appendString("a").build()).build();
 			cheatLib.addCheat(cheatA, false, false);
-			var cheatB:Cheat = new Cheat("test", cheatCode);
+			var cheatB:ToggleCheat = new ToggleCheat("test", cheatCode);
 			cheatLib.addMasterCheat(cheatB);
-			var cheatC:Cheat = CheatBuilder.create("c", CheatCodeBuilder.create().appendString("c").build()).build();
+			var cheatC:ToggleCheat = CheatBuilder.create("c", CheatCodeBuilder.create().appendString("c").build()).build();
 			cheatLib.addCheat(cheatC, false, false);
 
 			assertThat(cheatA.cheat_internal::parent, equalTo(cheatB));
@@ -148,13 +148,13 @@ package de.mattesgroeger.cheats
 		{
 			var cheatLib:CheatLib = new CheatLib(stage, "test");
 			
-			var cheatA:Cheat = Cheat(cheatLib.createCheat("a"));
-			var cheatB:Cheat = CheatBuilder.create("b", CheatCodeBuilder.create().appendString("b").build()).build();
+			var cheatA:ToggleCheat = ToggleCheat(cheatLib.createToggleCheat("a"));
+			var cheatB:ToggleCheat = CheatBuilder.create("b", CheatCodeBuilder.create().appendString("b").build()).build();
 			cheatLib.addCheat(cheatB);
-			var cheatC:Cheat = new Cheat("test", cheatCode);
+			var cheatC:ToggleCheat = new ToggleCheat("test", cheatCode);
 			cheatLib.addMasterCheat(cheatC);
-			var cheatD:Cheat = Cheat(cheatLib.createCheat("d"));
-			var cheatE:Cheat = CheatBuilder.create("e", CheatCodeBuilder.create().appendString("e").build()).build();
+			var cheatD:ToggleCheat = ToggleCheat(cheatLib.createToggleCheat("d"));
+			var cheatE:ToggleCheat = CheatBuilder.create("e", CheatCodeBuilder.create().appendString("e").build()).build();
 			cheatLib.addCheat(cheatE);
 
 			assertThat(cheatA.cheat_internal::parent, equalTo(cheatC));
@@ -173,12 +173,12 @@ package de.mattesgroeger.cheats
 		{
 			var cheatLib:CheatLib = new CheatLib(stage, "test");
 
-			var cheatA:Cheat = Cheat(cheatLib.createCheat("a"));
-			var cheatB:Cheat = CheatBuilder.create("b", CheatCodeBuilder.create().appendString("b").build()).build();
+			var cheatA:ToggleCheat = ToggleCheat(cheatLib.createToggleCheat("a"));
+			var cheatB:ToggleCheat = CheatBuilder.create("b", CheatCodeBuilder.create().appendString("b").build()).build();
 			cheatLib.addCheat(cheatB);
-			var cheatC:Cheat = Cheat(cheatLib.createMasterCheat("c"));
-			var cheatD:Cheat = Cheat(cheatLib.createCheat("d"));
-			var cheatE:Cheat = CheatBuilder.create("e", CheatCodeBuilder.create().appendString("e").build()).build();
+			var cheatC:ToggleCheat = ToggleCheat(cheatLib.createMasterToggleCheat("c"));
+			var cheatD:ToggleCheat = ToggleCheat(cheatLib.createToggleCheat("d"));
+			var cheatE:ToggleCheat = CheatBuilder.create("e", CheatCodeBuilder.create().appendString("e").build()).build();
 			cheatLib.addCheat(cheatE);
 
 			assertThat(cheatA.cheat_internal::parent, equalTo(cheatC));
@@ -196,11 +196,11 @@ package de.mattesgroeger.cheats
 		public function should_fail_because_of_multiple_master_cheats():void
 		{
 			var cheatLib:CheatLib = new CheatLib(stage, "test");
-			cheatLib.createMasterCheat("a");
+			cheatLib.createMasterToggleCheat("a");
 			
 			try
 			{
-				cheatLib.createMasterCheat("b");
+				cheatLib.createMasterToggleCheat("b");
 			}
 			catch (e:IllegalOperationError)
 			{
@@ -215,12 +215,12 @@ package de.mattesgroeger.cheats
 		{
 			var cheatLib:CheatLib = new CheatLib(stage, "test");
 
-			var cheatA:Cheat = Cheat(cheatLib.createCheat("a"));
-			var cheatB:Cheat = CheatBuilder.create("b", CheatCodeBuilder.create().appendString("b").build()).build();
+			var cheatA:ToggleCheat = ToggleCheat(cheatLib.createToggleCheat("a"));
+			var cheatB:ToggleCheat = CheatBuilder.create("b", CheatCodeBuilder.create().appendString("b").build()).build();
 			cheatLib.addCheat(cheatB);
-			var cheatC:Cheat = Cheat(cheatLib.createMasterCheat("c"));
-			var cheatD:Cheat = Cheat(cheatLib.createCheat("d"));
-			var cheatE:Cheat = CheatBuilder.create("e", CheatCodeBuilder.create().appendString("e").build()).build();
+			var cheatC:ToggleCheat = ToggleCheat(cheatLib.createMasterToggleCheat("c"));
+			var cheatD:ToggleCheat = ToggleCheat(cheatLib.createToggleCheat("d"));
+			var cheatE:ToggleCheat = CheatBuilder.create("e", CheatCodeBuilder.create().appendString("e").build()).build();
 			cheatLib.addCheat(cheatE);
 			
 			assertThat(cheatLib.getCheat("a"), equalTo(cheatA));

@@ -90,8 +90,8 @@ package de.mattesgroeger.cheats.controller
 			dispatchKey(1);
 			dispatchKey(2);
 			
-			verify(times(1)).that(cheatData1.toggle());
-			verify(never()).that(cheatData2.toggle());
+			verify(times(1)).that(cheatData1.trigger());
+			verify(never()).that(cheatData2.trigger());
 		}
 
 		[Test]
@@ -101,8 +101,8 @@ package de.mattesgroeger.cheats.controller
 			dispatchKey(99);
 			dispatchKey(2);
 			
-			verify(never()).that(cheatData1.toggle());
-			verify(never()).that(cheatData2.toggle());
+			verify(never()).that(cheatData1.trigger());
+			verify(never()).that(cheatData2.trigger());
 		}
 
 		[Test]
@@ -113,8 +113,8 @@ package de.mattesgroeger.cheats.controller
 			dispatchKey(1);
 			dispatchKey(2);
 			
-			verify(times(1)).that(cheatData1.toggle());
-			verify(never()).that(cheatData2.toggle());
+			verify(times(1)).that(cheatData1.trigger());
+			verify(never()).that(cheatData2.trigger());
 		}
 
 		[Test]
@@ -125,8 +125,8 @@ package de.mattesgroeger.cheats.controller
 			dispatchKey(1);
 			dispatchKey(2);
 			
-			verify(times(1)).that(cheatData1.toggle());
-			verify(never()).that(cheatData2.toggle());
+			verify(times(1)).that(cheatData1.trigger());
+			verify(never()).that(cheatData2.trigger());
 		}
 
 		[Test]
@@ -137,8 +137,8 @@ package de.mattesgroeger.cheats.controller
 			dispatchKey(3);
 			dispatchKey(4);
 			
-			verify(times(1)).that(cheatData1.toggle());
-			verify(times(1)).that(cheatData2.toggle());
+			verify(times(1)).that(cheatData1.trigger());
+			verify(times(1)).that(cheatData2.trigger());
 		}
 		
 		[Test(async)]
@@ -156,8 +156,8 @@ package de.mattesgroeger.cheats.controller
 		{
 			dispatchKey(4);
 			
-			verify(never()).that(cheatData1.toggle());
-			verify(never()).that(cheatData2.toggle());
+			verify(never()).that(cheatData1.trigger());
+			verify(never()).that(cheatData2.trigger());
 		}
 		
 		[Test(async)]
@@ -177,8 +177,8 @@ package de.mattesgroeger.cheats.controller
 		{
 			dispatchKey(4);
 			
-			verify(never()).that(cheatData1.toggle());
-			verify(times(1)).that(cheatData2.toggle());
+			verify(never()).that(cheatData1.trigger());
+			verify(times(1)).that(cheatData2.trigger());
 		}
 
 		private function dispatchKey(keyCode:uint):void

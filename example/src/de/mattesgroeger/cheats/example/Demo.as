@@ -21,12 +21,13 @@
  */
 package de.mattesgroeger.cheats.example
 {
-	import de.mattesgroeger.cheats.view.NotificationOutput;
-	import de.mattesgroeger.cheats.ICheatLib;
 	import de.mattesgroeger.cheats.CheatLib;
+	import de.mattesgroeger.cheats.ICheatLib;
 	import de.mattesgroeger.cheats.model.CheatBuilder;
 	import de.mattesgroeger.cheats.model.CheatCodeBuilder;
 	import de.mattesgroeger.cheats.model.ICheat;
+	import de.mattesgroeger.cheats.model.IToggleCheat;
+	import de.mattesgroeger.cheats.view.NotificationOutput;
 
 	import flash.display.Sprite;
 	import flash.ui.Keyboard;
@@ -44,17 +45,17 @@ package de.mattesgroeger.cheats.example
 			cheatLib.output = new NotificationOutput(stage);
 			
 			// Register central listener for all cheats
-			cheatLib.toggledSignal.add(handleAllCheatsToggle);
+			cheatLib.triggerSignal.add(handleAllCheatsTrigger);
 
 			// Persistent master cheat
-			cheatLib.createMasterCheat("master", true, "Cheats");
+			cheatLib.createMasterToggleCheat("master", true, "Cheats");
 			
 			// Not persistent cheat
 			cheatLib.createCheat("bart");
 
 			// Persistent cheat with custom toggle listener
-			cheatLib.createCheat("lisa", true)
-				.toggledSignal
+			cheatLib.createToggleCheat("lisa", true)
+				.toggleSignal
 				.add(handleLisaCheatToggle);
 
 			// Cheat with complex code
@@ -70,18 +71,18 @@ package de.mattesgroeger.cheats.example
 			// Access your cheats anywhere
 			trace("master cheat active: " + 
 					CheatLib.get("demo")
-						.getCheat("master")
+						.getToggleCheat("master")
 						.activated);
 		}
 
-		private function handleLisaCheatToggle(cheat:ICheat):void
+		private function handleLisaCheatToggle(cheat:IToggleCheat):void
 		{
 			trace("Cheat 'lisa' (custom listener) " + cheat.activated);
 		}
 
-		private function handleAllCheatsToggle(cheat:ICheat):void
+		private function handleAllCheatsTrigger(cheat:ICheat):void
 		{
-			trace("Cheat '" + cheat.id + "' " + cheat.activated);
+			trace("Cheat '" + cheat.id + "' triggered");
 		}
 	}
 }

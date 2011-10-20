@@ -27,11 +27,11 @@ package de.mattesgroeger.cheats.view
 	{
 		/**
 		 * Will be called whenever a cheat of the corresponding 
-		 * <tt>CheatLib</tt> had been toggled.
+		 * <tt>CheatLib</tt> had been triggered.
 		 * 
 		 * @return void
 		 */
-		function cheatToggled(cheat:ICheat):void;
+		function cheatTriggered(cheat:ICheat):void;
 		
 		/**
 		 * Will be called whenever the corresponding <tt>CheatLib</tt>

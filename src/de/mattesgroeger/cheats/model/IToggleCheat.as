@@ -19,26 +19,42 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package
+package de.mattesgroeger.cheats.model
 {
-	import de.mattesgroeger.cheats.CheatLibTest;
-	import de.mattesgroeger.cheats.controller.CheatObserverTest;
-	import de.mattesgroeger.cheats.model.CheatBuilderTest;
-	import de.mattesgroeger.cheats.model.CheatCodeBuilderTest;
-	import de.mattesgroeger.cheats.model.CheatCodeTest;
-	import de.mattesgroeger.cheats.model.ToggleCheatTest;
-	import de.mattesgroeger.cheats.util.KeyCodeUtilTest;
-
-	[Suite]
-	[RunWith("org.flexunit.runners.Suite")]
-	public class CheatsTestSuite
+	import org.osflash.signals.ISignal;
+	
+	/**
+	 * Interface for all cheats that can be toggled.
+	 */
+	public interface IToggleCheat extends ICheat
 	{
-		public var cheatLibTest:CheatLibTest;
-		public var keyCodeUtilTest:KeyCodeUtilTest;
-		public var cheatTest:ToggleCheatTest;
-		public var cheatBuilderTest:CheatBuilderTest;
-		public var cheatCodeTest:CheatCodeTest;
-		public var cheatCodeBuilderTest:CheatCodeBuilderTest;
-		public var cheatObserverTest:CheatObserverTest;
+		/**
+		 * Returns whether the cheat is currently activated or not. Note that 
+		 * it will return always true if the cheat is not togglable!
+		 * 
+		 * <p>Be aware that the state won't be updated in case of a master
+		 * cheat that is not activated.</p>
+		 */
+		function get activated():Boolean;
+		
+		/**
+		 * The Signal gets dispatched whenever the cheat has been 
+		 * toggled (activated/deactivated). The registered listener 
+		 * function needs to have one parameter of type 
+		 * <tt>IToggleCheat</tt>.
+		 * 
+		 * @example <listing version="3.0">
+		 * CheatLib.get("demo")
+		 *     .getCheat("test")
+		 *         .toggleSignal
+		 *         .add(handleCheatToggle);
+		 * 
+		 * function handleCheatToggle(cheat:IToggleCheat):void
+		 * {
+		 *     trace("Cheat " + cheat.activated);
+		 * }</listing>
+		 * @see de.mattesgroeger.cheats.model.ICheat
+		 */
+		function get toggleSignal():ISignal;
 	}
 }

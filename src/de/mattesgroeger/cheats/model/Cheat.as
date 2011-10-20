@@ -27,23 +27,20 @@ package de.mattesgroeger.cheats.model
 	import org.osflash.signals.Signal;
 
 	import flash.errors.IllegalOperationError;
-	import flash.net.SharedObject;
 	
 	use namespace cheat_internal;
-	
+
 	public class Cheat implements ICheat
 	{
 		private var _id:String;
 		private var _code:ICheatCode;
-		private var _parent:Cheat;
+		private var _parent:ToggleCheat;
 		private var _label:String;
 		
 		private var _children:Vector.<Cheat>;
-		private var _activated:Boolean = false;
-		private var _toggledSignal:Signal = new Signal(ICheat);
-		private var _sharedObject:SharedObject;
+		private var _triggerSignal:Signal = new Signal(ICheat);
 
-		public function Cheat(id:String, code:ICheatCode, parent:Cheat = null, label:String = null)
+		public function Cheat(id:String, code:ICheatCode, parent:ToggleCheat = null, label:String = null)
 		{
 			_id = id;
 			_code = code;
@@ -89,54 +86,29 @@ package de.mattesgroeger.cheats.model
 		/**
 		 * @inheritDoc
 		 */
-		public function get toggledSignal():ISignal
+		public function get triggerSignal():ISignal
 		{
-			return _toggledSignal;
+			return _triggerSignal;
 		}
 
 		/**
 		 * @private
 		 */
-		public function set activated(activated:Boolean):void
+		public function trigger():void
 		{
 			if (!parentActivated())
 				return;
 			
-			if (_activated == activated)
-				return;
-			
-			_activated = activated;
-			_toggledSignal.dispatch(this);
-			
-			storeState();
+			_triggerSignal.dispatch(this);
 		}
 
-		/**
-		 * @inheritDoc
-		 */
-		public function get activated():Boolean
-		{
-			return (parentActivated()) ? _activated : false;
-		}
-		
-		/**
-		 * @private
-		 */
-		public function toggle():void
-		{
-			if (!parentActivated())
-				return;
-			
-			activated = !_activated;
-		}
-
-		cheat_internal function set parent(parent:Cheat):void
+		cheat_internal function set parent(parent:ToggleCheat):void
 		{
 			_parent = parent;
 			_parent.addChild(this);
 		}
 
-		cheat_internal function get parent():Cheat
+		cheat_internal function get parent():ToggleCheat
 		{
 			return _parent;
 		}
@@ -155,26 +127,7 @@ package de.mattesgroeger.cheats.model
 			_children.push(data);
 		}
 
-		cheat_internal function set sharedObject(sharedObject:SharedObject):void
-		{
-			_sharedObject = sharedObject;
-			
-			loadState();
-		}
-
-		private function storeState():void
-		{
-			if (_sharedObject != null)
-				_sharedObject.data[id] = activated;
-		}
-
-		private function loadState():void
-		{
-			if (_sharedObject.data[id] is Boolean)
-				activated = _sharedObject.data[id];
-		}
-
-		private function parentActivated():Boolean
+		protected function parentActivated():Boolean
 		{
 			return (_parent) ? _parent.activated : true;
 		}

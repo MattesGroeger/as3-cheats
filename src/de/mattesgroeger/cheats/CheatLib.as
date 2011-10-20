@@ -21,11 +21,13 @@
  */
 package de.mattesgroeger.cheats
 {
+	import de.mattesgroeger.cheats.model.ICheat;
+	import de.mattesgroeger.cheats.model.Cheat;
 	import de.mattesgroeger.cheats.controller.CheatObserver;
 	import de.mattesgroeger.cheats.controller.ICheatsProvider;
-	import de.mattesgroeger.cheats.model.Cheat;
+	import de.mattesgroeger.cheats.model.ToggleCheat;
 	import de.mattesgroeger.cheats.model.CheatCodeBuilder;
-	import de.mattesgroeger.cheats.model.ICheat;
+	import de.mattesgroeger.cheats.model.IToggleCheat;
 	import de.mattesgroeger.cheats.model.ICheatCode;
 	import de.mattesgroeger.cheats.view.ICheatOutput;
 	import de.mattesgroeger.cheats.view.NoOutput;
@@ -52,12 +54,12 @@ package de.mattesgroeger.cheats
 		private static var cheatLibs:Dictionary = new Dictionary();
 		
 		private var _timeoutMs:uint;
-		private var _masterCheat:Cheat;
+		private var _masterCheat:ToggleCheat;
 		private var _cheats:Vector.<Cheat>;
 		private var _cheatObserver:CheatObserver;
 		private var _sharedObject:SharedObject;
 		private var _cheatOutput:ICheatOutput;
-		private var _toggledSignal:Signal = new Signal(ICheat);
+		private var _triggeredSignal:Signal = new Signal(ICheat);
 		
 		/**
 		 * Creates a new <tt>CheatLib</tt> instance where you can add the cheats.
@@ -140,9 +142,9 @@ package de.mattesgroeger.cheats
 		/**
 		 * @inheritDoc
 		 */
-		public function get toggledSignal():ISignal
+		public function get triggerSignal():ISignal
 		{
-			return _toggledSignal;
+			return _triggeredSignal;
 		}
 		
 		/**
@@ -170,12 +172,25 @@ package de.mattesgroeger.cheats
 		/**
 		 * @inheritDoc
 		 */
-		public function createMasterCheat(code:String, persist:Boolean = false, label:String = null):ICheat
+		public function getToggleCheat(id:String):IToggleCheat
+		{
+			var cheat:ICheat = getCheat(id);
+			
+			if (cheat is IToggleCheat)
+				return cheat as IToggleCheat;
+			
+			throw new IllegalOperationError("Requested cheat " + id + " is not togglable! Make sure you set it up before as toggle cheat.");
+		}
+
+		/**
+		 * @inheritDoc
+		 */
+		public function createMasterToggleCheat(code:String, persist:Boolean = false, label:String = null):IToggleCheat
 		{
 			if (_masterCheat != null)
 				throw new IllegalOperationError("You can only set one master cheat! Already set " + _masterCheat.id + "!");
-			
-			_masterCheat = buildCheat(code, label);
+
+			_masterCheat = ToggleCheat(buildCheat(code, label, true));
 			
 			registerCheat(_masterCheat, persist);
 			updateMasterCheatInExistingOnes();
@@ -186,7 +201,7 @@ package de.mattesgroeger.cheats
 		/**
 		 * @inheritDoc
 		 */
-		public function addMasterCheat(cheat:Cheat, persist:Boolean = false):void
+		public function addMasterCheat(cheat:ToggleCheat, persist:Boolean = false):void
 		{
 			if (_masterCheat != null)
 				throw new IllegalOperationError("You can only set one master cheat! Already set " + _masterCheat.id + "!");
@@ -200,9 +215,21 @@ package de.mattesgroeger.cheats
 		/**
 		 * @inheritDoc
 		 */
-		public function createCheat(code:String, persist:Boolean = false, label:String = null):ICheat
+		public function createCheat(code:String, label:String = null):ICheat
 		{
-			var cheat:Cheat = buildCheat(code, label);
+			var cheat:Cheat = buildCheat(code, label, false);
+			registerCheat(cheat, false);
+			
+			return cheat;
+		}
+
+		/**
+		 * @inheritDoc
+		 */
+		public function createToggleCheat(code:String, persist:Boolean = false, label:String = null):IToggleCheat
+		{
+			var cheat:ToggleCheat = ToggleCheat(buildCheat(code, label, true));
+			
 			registerCheat(cheat, persist);
 			
 			return cheat;
@@ -211,7 +238,7 @@ package de.mattesgroeger.cheats
 		/**
 		 * @inheritDoc
 		 */
-		public function addCheat(cheat:Cheat, persist:Boolean = false, applyMaster:Boolean = true):void
+		public function addCheat(cheat:ToggleCheat, persist:Boolean = false, applyMaster:Boolean = true):void
 		{
 			if (_masterCheat && applyMaster)
 				cheat.parent = _masterCheat;
@@ -219,18 +246,23 @@ package de.mattesgroeger.cheats
 			if (persist)
 				cheat.sharedObject = _sharedObject;
 			
-			cheat.toggledSignal.add(handleToggledSignal);
+			cheat.triggerSignal.add(handleTriggerSignal);
 			
 			_cheats.push(cheat);
 		}
 
-		private function buildCheat(code:String, label:String):Cheat
+		private function buildCheat(code:String, label:String, togglable:Boolean):Cheat
 		{
 			var cheatCode:ICheatCode = CheatCodeBuilder.create()
 											.appendString(code)
 											.build();
 			
-			var cheat:Cheat = new Cheat(code, cheatCode, _masterCheat);
+			var cheat:Cheat;
+			
+			if (togglable)
+				cheat = new ToggleCheat(code, cheatCode, _masterCheat);
+			else
+				cheat = new Cheat(code, cheatCode, _masterCheat);
 			
 			if (label != null)
 				cheat.label = label;
@@ -240,17 +272,17 @@ package de.mattesgroeger.cheats
 
 		private function registerCheat(cheat:Cheat, persist:Boolean):void
 		{
-			if (persist)
-				cheat.sharedObject = _sharedObject;
+			if (persist && cheat is ToggleCheat)
+				ToggleCheat(cheat).sharedObject = _sharedObject;
 			
-			cheat.toggledSignal.add(handleToggledSignal);
+			cheat.triggerSignal.add(handleTriggerSignal);
 			
 			_cheats.push(cheat);
 		}
 
 		private function updateMasterCheatInExistingOnes():void
 		{
-			for each (var cheat:Cheat in _cheats)
+			for each (var cheat:ToggleCheat in _cheats)
 			{
 				if (cheat == _masterCheat)
 					continue;
@@ -259,10 +291,10 @@ package de.mattesgroeger.cheats
 			}
 		}
 
-		private function handleToggledSignal(cheat:ICheat):void
+		private function handleTriggerSignal(cheat:ICheat):void
 		{
-			_cheatOutput.cheatToggled(cheat);
-			_toggledSignal.dispatch(cheat);
+			_cheatOutput.cheatTriggered(cheat);
+			_triggeredSignal.dispatch(cheat);
 		}
 
 		/**
@@ -270,8 +302,8 @@ package de.mattesgroeger.cheats
 		 */
 		public function destroy():void
 		{
-			for each (var cheat:Cheat in _cheats)
-				cheat.toggledSignal.remove(handleToggledSignal);
+			for each (var cheat:ToggleCheat in _cheats)
+				cheat.triggerSignal.remove(handleTriggerSignal);
 			
 			_cheatOutput.destroy();
 			_cheatObserver.destroy();

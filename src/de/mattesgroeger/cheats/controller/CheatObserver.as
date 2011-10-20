@@ -75,7 +75,7 @@ package de.mattesgroeger.cheats.controller
 					if (cheatIndexes[cheatData] + 1 == cheatData.code.length)
 					{
 						cheatIndexes[cheatData] = 0;
-						cheatData.toggle();
+						cheatData.trigger();
 					}
 					else
 					{
