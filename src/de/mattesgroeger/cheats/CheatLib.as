@@ -120,8 +120,7 @@ package de.mattesgroeger.cheats
 			_cheatObserver = new CheatObserver(stage, this);
 			_cheatOutput = new NoOutput();
 
-			createSharedObject( id );
-
+			createSharedObject(id);
 		}
 		
 		/**
@@ -226,13 +225,13 @@ package de.mattesgroeger.cheats
 			_cheats.push(cheat);
 		}
 		
-		private function createSharedObject( id : String ) : void
+		private function createSharedObject(id:String):void
 		{
 			try
 			{
-				_sharedObject = SharedObject.getLocal( id );
+				_sharedObject = SharedObject.getLocal(id);
 			}
-			catch ( error : Error )
+			catch (error:Error)
 			{
 				_sharedObject = null;
 			}

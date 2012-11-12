@@ -170,7 +170,7 @@ package de.mattesgroeger.cheats.model
 
 		private function loadState():void
 		{
-			if ( _sharedObject != null && _sharedObject.data[id] is Boolean )
+			if (_sharedObject != null && _sharedObject.data[id] is Boolean)
 				activated = _sharedObject.data[id];
 		}
 
