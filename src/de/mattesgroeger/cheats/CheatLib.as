@@ -118,8 +118,9 @@ package de.mattesgroeger.cheats
 			_timeoutMs = timeoutMs;
 			_cheats = new Vector.<Cheat>();
 			_cheatObserver = new CheatObserver(stage, this);
-			_sharedObject = SharedObject.getLocal(id);
 			_cheatOutput = new NoOutput();
+
+			createSharedObject(id);
 		}
 		
 		/**
@@ -222,6 +223,18 @@ package de.mattesgroeger.cheats
 			cheat.toggledSignal.add(handleToggledSignal);
 			
 			_cheats.push(cheat);
+		}
+		
+		private function createSharedObject(id:String):void
+		{
+			try
+			{
+				_sharedObject = SharedObject.getLocal(id);
+			}
+			catch (error:Error)
+			{
+				_sharedObject = null;
+			}
 		}
 
 		private function buildCheat(code:String, label:String):Cheat
